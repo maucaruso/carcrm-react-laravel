@@ -1,11 +1,11 @@
 import { actionTypes } from '../actions/loading.action';
 
 const initialState = {
-  open: true,
+  open: false,
   msg: 'Carregando...'
 }
 
-export default (state = initialState, { type, payload }) => {
+const loadingReducer = (state = initialState, { type, payload }) => {
   switch (type) {
 
   case actionTypes.CHANGE:
@@ -15,3 +15,5 @@ export default (state = initialState, { type, payload }) => {
     return state
   }
 }
+
+export default loadingReducer

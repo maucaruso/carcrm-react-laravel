@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Routes from './Routes';
 
 import './global.css';
-import { Loading } from './view/components';
+import { Loading, Notify, Alert, Confirm } from './view/components';
 
 const theme = createTheme({
   palette: {
@@ -30,6 +30,9 @@ const App = () => (
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <Loading />
+      <Notify />
+      <Alert />
+      <Confirm open={true} onClose={() => alert('close')} onConfirm={() => alert('confirm')} />
       <Routes />
     </ThemeProvider>
   </Provider>
