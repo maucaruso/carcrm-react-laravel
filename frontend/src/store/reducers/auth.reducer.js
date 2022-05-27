@@ -1,7 +1,10 @@
 import { actionTypes } from '../actions/auth.action';
 
 const initialState = {
-  credentials: {},
+  credentials: {
+    email: '',
+    password: ''
+  },
   success: false
 }
 

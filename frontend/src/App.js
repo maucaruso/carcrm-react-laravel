@@ -32,7 +32,7 @@ const App = () => (
       <Loading />
       <Notify />
       <Alert />
-      <Confirm open={true} onClose={() => alert('close')} onConfirm={() => alert('confirm')} />
+      {/*<Confirm open={true} onClose={() => alert('close')} onConfirm={() => alert('confirm')} />*/}
       <Routes />
     </ThemeProvider>
   </Provider>

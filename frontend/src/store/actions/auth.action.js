@@ -34,7 +34,7 @@ export const login = credentials => async dispatch => {
     msg: 'Autenticando o usuário'
   }));
 
-  return await Http.post('oauth/token', {
+  return await Http.post('/oauth/token', {
     grant_type: 'password',
     client_id: 2,
     client_secret: '4aWskSaOA2SWKS7PWFEedR5v74IQ5wJay09GMorh',
