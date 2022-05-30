@@ -11,7 +11,7 @@ import { Loading, Notify, Alert, Confirm } from './view/components';
 const theme = createTheme({
   palette: {
     primary: {
-      main: blue[900]
+      main: blue[600]
     }
   },
   props: {

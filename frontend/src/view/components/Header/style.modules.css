@@ -1,0 +1,44 @@
+.header {
+  border-bottom: 2px solid rgb(229,229,229);
+}
+
+.header .nav-link {
+  font-weight: 500;
+  color: #555 !important;
+  padding: 28px 1.5rem !important;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.header .nav-link:hover {
+  border-bottom: 2px solid #1976d2;
+}
+
+.header .dropdown:hover > .dropdown-menu {
+  display: block;
+}
+
+.header .dropdown-menu {
+  box-shadow: rgba(0,0,0,0.08) 0 4px 16px 0, rgba(0,0,0,0.06) 0 2px 6px 0;
+  border: 1px solid #eee;
+  top: 80%;
+}
+
+.header .dropdown-item {
+  padding: 10px 15px;
+}
+
+.logo-mobile {
+  max-height: 40px;
+  margin: auto;
+}
+
+.menu-mobile .MuiListItemText-primary {
+  color: #444;
+}
+
+.menu-mobile svg {
+  font-size: 20px;
+  color: #444;
+}
