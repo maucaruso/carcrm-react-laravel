@@ -37,7 +37,7 @@ export const login = credentials => async dispatch => {
   return await Http.post('/oauth/token', {
     grant_type: 'password',
     client_id: 2,
-    client_secret: '4aWskSaOA2SWKS7PWFEedR5v74IQ5wJay09GMorh',
+    client_secret: '5Or59lH3AGDeWHjY1un1m5kZypZ71S79Ea3zDsnA',
     username: credentials.email,
     password: credentials.password,
     scope: ''
