@@ -25,7 +25,7 @@ export default function Auth() {
         <div className="row justify-content-center">
           <div className="col-md-4">
             <div className="form-group text-center">
-              <img src="logo.png" alt="CAR CRM" height="54px" />
+              <img src="/logo.png" alt="CAR CRM" height="54px" />
               <Typography className="mt-3 mb-3" variat="h6" component="h1">
                 Plataforma para Revenda de Veículos
               </Typography>

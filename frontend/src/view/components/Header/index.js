@@ -57,9 +57,9 @@ export default function Header(props) {
         </AppBar>
       ) : (
         <div className="header navbar navbar-expand-lg navbar-light bg-white p-0">
-          <div class="container">
+          <div className="container">
             <Link className="navbar-brand" to="/">
-              <img src="logo.png" alt="Car CRM" height="37" />
+              <img src="/logo.png" alt="Car CRM" height="37" />
             </Link>
 
             <ul className="navbar-nav">
@@ -143,7 +143,7 @@ export default function Header(props) {
         <div style={{width: 320, maxWidth: window.innerWidth - 70}}>
           <List omponent="nav" className="menu-mobile">
             <ListItem>
-              <img className="img-fluid logo-mobile" src="logo.png" alt="Car CRM" height="37" />
+              <img className="img-fluid logo-mobile" src="/logo.png" alt="Car CRM" height="37" />
             </ListItem>
 
             <ListItem>

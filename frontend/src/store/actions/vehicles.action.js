@@ -3,9 +3,6 @@ import { changeLoading } from "./loading.action";
 
 export const actionTypes = {
   INDEX: "VEHICLE_INDEX",
-  STORE: "VEHICLE_STORE",
-  SHOW: "VEHICLE_SHOW",
-  UPDATE: "VEHICLE_UPDATE",
   DESTROY: "VEHICLE_DESTROY",
   CHANGE: "VEHICLE_CHANGE",
   SUCCESS: "VEHICLE_SUCCESS",
@@ -35,37 +32,30 @@ export const indexResponse = (payload, isLoadMore) => ({
 });
 
 export const index = (query, isLoadMore) => (dispatch) => {
-  return HttpAuth.get("/vehicles?" + new URLSearchParams(query)).then((res) => {
-    if (typeof res !== "undefined") {
-      dispatch(indexResponse(res.data, isLoadMore));
-    }
-  });
+  return HttpAuth.get("/vehicles?" + new URLSearchParams(query)).then(
+    (res) =>
+      typeof res !== "undefined" &&
+      dispatch(indexResponse(res.data, isLoadMore))
+  );
 };
 
 // STORE
 
 export const store = () => (dispatch) => {
-  return HttpAuth.post("/vehicles").then((res) => {
-    if (typeof res !== "undefined") {
-      dispatch(indexResponse(res.data));
-    }
-  });
+  return HttpAuth.post("/vehicles").then(
+    (res) => typeof res !== "undefined" && dispatch(indexResponse(res.data))
+  );
 };
 
 // SHOW
+
 export const show = (id) => (dispatch) => {
-  return HttpAuth.get("/vehicles/" + id).then((res) => {
-    if (typeof res !== "undefined") {
-      dispatch(indexResponse(res.data));
-    }
-  });
+  return HttpAuth.get("/vehicles/" + id).then(
+    (res) => typeof res !== "undefined" && dispatch(indexResponse(res.data))
+  );
 };
 
 // UPDATE
-export const updateResponse = (payload) => ({
-  type: actionTypes.UPDATE,
-  payload,
-});
 
 export const update = (data) => (dispatch) => {
   dispatch(
@@ -94,19 +84,29 @@ export const update = (data) => (dispatch) => {
   });
 };
 
-// DETROY
+// DESTROY
 
 export const destroyResponse = (payload) => ({
   type: actionTypes.DESTROY,
-  payload
-})
+  payload,
+});
 
-export const destroy = (id) => dispatch => {
-  return HttpAuth.delete('/vehicles/', + id).then(res => {
-    if (typeof res !== 'undefined') {
+export const destroy = (id) => (dispatch) => {
+  return HttpAuth.delete("/vehicles/", +id).then((res) => {
+    if (typeof res !== "undefined") {
       if (res.data.status === 200) {
         dispatch(destroyResponse(id));
       }
     }
   });
+};
+
+// CEP
+
+export const cep = (zipCode) => dispatch => {
+  if (zipCode.length > 8) {
+    return HttpAuth.post("/webservice/cep", {
+      cep: zipCode
+    }).then(res => typeof res !== 'undefined' && dispatch(change(res.data)));
+  }
 }

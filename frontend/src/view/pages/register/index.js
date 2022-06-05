@@ -15,7 +15,7 @@ export default function Register() {
         <div className="row d-flex justify-content-center">
           <div className="col-md-4">
             <div className="form-group text-center">
-              <img src="logo.png" height="54" alt="CAR CRM" />
+              <img src="/logo.png" height="54" alt="CAR CRM" />
               <Typography component="h1" variant="h6" className="mt-3">
                 Crie sua conta teste grátis!
               </Typography>
