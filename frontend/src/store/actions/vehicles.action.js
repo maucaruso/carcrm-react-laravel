@@ -101,12 +101,86 @@ export const destroy = (id) => (dispatch) => {
   });
 };
 
+// VEHICLE BRAND
+
+export const brand = (vehicle_type) => (dispatch) => {
+  dispatch(
+    changeLoading({
+      open: true,
+    })
+  );
+
+  return HttpAuth.get("/vehicles/" + vehicle_type + "/brand").then((res) => {
+    dispatch(
+      changeLoading({
+        open: false,
+      })
+    );
+
+    if (typeof res !== "undefined") {
+      dispatch(indexResponse(res.data));
+    }
+  });
+};
+
+// VEHICLE MODEL
+
+export const model = (vehicle_type, vehicle_brand) => (dispatch) => {
+  dispatch(
+    changeLoading({
+      open: true,
+    })
+  );
+  return HttpAuth.get(
+    "/vehicles/" + vehicle_type + "/" + vehicle_brand + "/model"
+  ).then((res) => {
+    dispatch(
+      changeLoading({
+        open: false,
+      })
+    );
+
+    if (typeof res !== "undefined") {
+      dispatch(indexResponse(res.data));
+    }
+  });
+};
+
+// VEHICLE VERSIONS
+
+export const version = (vehicle_brand, vehicle_model) => (dispatch) => {
+  dispatch(
+    changeLoading({
+      open: true,
+    })
+  );
+  return HttpAuth.get(
+    "/vehicles/" + vehicle_brand + "/" + vehicle_model + "/version"
+  ).then((res) => {
+    dispatch(
+      changeLoading({
+        open: false,
+      })
+    );
+
+    if (typeof res !== "undefined") {
+      dispatch(indexResponse(res.data));
+    }
+  });
+};
+
 // CEP
 
-export const cep = (zipCode) => dispatch => {
+export const cep = (zipCode) => (dispatch) => {
   if (zipCode.length > 8) {
     return HttpAuth.post("/webservice/cep", {
-      cep: zipCode
-    }).then(res => typeof res !== 'undefined' && dispatch(change(res.data)));
+      cep: zipCode,
+    }).then((res) => {
+      if (typeof res !== "undefined") {
+        return res.data.error
+          ? dispatch(error(res.data.error))
+          : dispatch(change(res.data));
+      }
+    });
   }
-}
+};

@@ -1,12 +1,21 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { CircularProgress, TextField, Select, MenuItem, InputAdornment } from "@material-ui/core";
+import {
+  CircularProgress,
+  TextField,
+  Select,
+  MenuItem,
+  InputAdornment,
+} from "@material-ui/core";
 import Header from "../../components/Header";
 import {
   store,
   show,
   change,
   cep,
+  brand,
+  model,
+  version,
 } from "../../../store/actions/vehicles.action";
 import MaskedInput from "react-text-mask";
 
@@ -53,7 +62,6 @@ export default function VehicleEdit(props) {
       });
     } else {
       dispatch(store()).then((res) => {
-        console.log(res);
         if (res) {
           setState({ isLoading: false });
         }
@@ -116,10 +124,9 @@ export default function VehicleEdit(props) {
                         ),
                       }}
                     />
-
                     {data.error.zipCode && (
                       <strong className="text-danger">
-                        {data.error.zipCode[0]}
+                        {data.error.zipCode}
                       </strong>
                     )}
                   </div>
@@ -132,7 +139,7 @@ export default function VehicleEdit(props) {
                     <TextField
                       error={data.error.city && true}
                       disabled
-                      value={data.vehicle.city}
+                      value={data.vehicle.city || ""}
                     />
                     {data.error.city && (
                       <strong className="text-danger">
@@ -146,7 +153,7 @@ export default function VehicleEdit(props) {
                     <TextField
                       error={data.error.uf && true}
                       disabled
-                      value={data.vehicle.uf}
+                      value={data.vehicle.uf || ""}
                     />
                     {data.error.uf && (
                       <strong className="text-danger">
@@ -163,12 +170,43 @@ export default function VehicleEdit(props) {
                   <label className="label-custom">CATEGORIA</label>
                   <Select
                     error={data.error.vehicle_type && true}
-                    value={data.vehicle.vehicle_type}
-                    onChange={event => {
-
+                    value={data.vehicle.vehicle_type || 0}
+                    onChange={(event) => {
+                      dispatch(
+                        change({
+                          vehicle_type: event.target.value,
+                          vehicle_brand: null,
+                          vehicle_model: null,
+                          vehicle_version: null,
+                          vehicle_gearbox: null,
+                          vehicle_fuel: null,
+                          vehicle_steering: null,
+                          vehicle_motorpower: null,
+                          vehicle_doors: null,
+                        })
+                      );
+                      dispatch(brand(event.target.value));
+                      if (data.error.vehicle_type) {
+                        delete data.error.vehicle_type;
+                      }
                     }}
                   >
-                    {data.vehicle_types.map(item => (
+                    {data.vehicle_types.map((item) => (
+                      <MenuItem key={item.id} value={item.value}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </div>
+
+                <div className="form-group">
+                  <label className="label-custom">MARCAS</label>
+
+                  <Select
+                    error={data.error.vehicle_brand && true}
+                    value={data.vehicle.vehicle_brand || 0}
+                  >
+                    {data.vehicle_brand.map((item) => (
                       <MenuItem key={item.id} value={item.value}>
                         {item.label}
                       </MenuItem>

@@ -15,12 +15,10 @@ class WebserviceController extends Controller
 
         $response = json_decode($response);
 
-        if ($response->erro) {
+        if (!$response || isset($response->erro)) {
             return json_encode([
-                "data" => [
-                    "error" => [
-                        "zipCode" => "Não foi possível localizar este cep"
-                    ]
+                "error" => [
+                    "zipCode" => "Não foi possível localizar este cep"
                 ]
             ]);
         }
