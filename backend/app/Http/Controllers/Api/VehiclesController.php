@@ -81,24 +81,22 @@ class VehiclesController extends Controller
         //
     }
 
-    public function brand($vehicle_type)
+    public function brand(int $vehicle_type)
     {
         $vehicle_brand = Vehicle_brand::where('vehicle_type_id', $vehicle_type)->get();
-
-        return compact($vehicle_brand);
+        return ['vehicle_brand' => $vehicle_brand];
     }
 
     public function model($vehicle_type, $vehicle_brand)
     {
         $vehicle_model = Vehicle_model::where('vehicle_type_id', $vehicle_type)->where('brand_id', $vehicle_brand)->orderBy('label')->get();
-
-        return compact($vehicle_model);
+        return ['vehicle_model' => $vehicle_model];
     }
 
     public function version($vehicle_brand, $vehicle_model)
     {
         $vehicle_version = Vehicle_version::where('brand_id', $vehicle_brand)->where('model_id', $vehicle_model)->orderBy('label')->get();
 
-        return compact($vehicle_version);
+        return ['vehicle_version' => $vehicle_version];
     }
 }
