@@ -6,7 +6,7 @@ const initialState = {
   },
   vehicle: {},
   vehicle_brand: [],
-  vehicle_mdoel: [],
+  vehicle_model: [],
   vehicle_version: [],
   success: false,
   error: {},

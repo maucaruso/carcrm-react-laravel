@@ -60,7 +60,7 @@ class DataScraping extends Controller
                     Vehicle_version::firstOrCreate([
                         'brand_id' => $brand->value,
                         'model_id' => $model->value,
-                        'label' => $version->value,
+                        'label' => $version->label,
                         'value' => $version->value
                     ]);
                 }
