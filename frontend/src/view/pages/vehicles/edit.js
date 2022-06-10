@@ -6,8 +6,10 @@ import {
   Select,
   MenuItem,
   InputAdornment,
+  FormControlLabel,
+  Checkbox,
 } from "@material-ui/core";
-import NumberFormat from 'react-number-format';
+import NumberFormat from "react-number-format";
 import Header from "../../components/Header";
 import {
   store,
@@ -41,22 +43,24 @@ const NumberFormatCustom = (props) => {
   return (
     <NumberFormat
       {...other}
-      onValueChange={values => {
-        onChange({target: {
-          value: values.value
-        }})
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            value: values.value,
+          },
+        });
       }}
       decimalSeparator=","
       thousandSeparator="."
       prefix={other.name}
     />
-  )
-}
+  );
+};
 
 export default function VehicleEdit(props) {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.vehiclesReducer);
-
+  console.log(data);
   const [state, setState] = useState({
     isLoading: true,
     isLoadingCep: false,
@@ -483,9 +487,7 @@ export default function VehicleEdit(props) {
                     <Select
                       value={data.vehicle.vehicle_color}
                       onChange={(event) =>
-                        dispatch(
-                          change({ vehicle_color: event.target.value })
-                        )
+                        dispatch(change({ vehicle_color: event.target.value }))
                       }
                     >
                       {data.carcolor.map((item) => (
@@ -498,22 +500,167 @@ export default function VehicleEdit(props) {
 
                   <div className="col-md-6 form-group">
                     <label className="label-custom">QUILOMETRAGEM</label>
-                    <TextField 
+                    <TextField
                       type="tel"
                       InputProps={{
                         inputComponent: NumberFormatCustom,
-                        value: data.vehicle.vehicle_mileage || '',
-                        onChange: (text) => dispatch(change({ vehicle_mileage: text.target.value }))
+                        value: data.vehicle.vehicle_mileage || "",
+                        onChange: (text) =>
+                          dispatch(
+                            change({ vehicle_mileage: text.target.value })
+                          ),
                       }}
                     />
                   </div>
                 </div>
               </div>
 
-              
-            </div>
+              {data.vehicle.vehicle_type && (
+                <>
+                  <h3 className="font-weight-normal mb-4">Itens e opcionais</h3>
+                  <div className="card card-body mb-4">
+                    <div className="row">
+                      {data.features.map(
+                        (item) =>
+                          item.vehicle_type_id ===
+                            data.vehicle.vehicle_type && (
+                            <div
+                              key={item.id}
+                              className="col-md-6"
+                              data-value={item.label}
+                            >
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={
+                                      data.vehicle.vehicle_features[item.value]
+                                        ? true
+                                        : false
+                                    }
+                                    onChange={() => {
+                                      const checked = data.vehicle
+                                        .vehicle_features[item.value]
+                                        ? delete data.vehicle.vehicle_features[
+                                            item.value
+                                          ]
+                                        : { [item.value]: item };
+                                      dispatch(
+                                        change({
+                                          vehicle_features: {
+                                            ...data.vehicle.vehicle_features,
+                                            ...checked,
+                                          },
+                                        })
+                                      );
+                                    }}
+                                  />
+                                }
+                                label={item.label}
+                              />
+                            </div>
+                          )
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
 
-            <div className="col-md-5"></div>
+              <h3 className="font-weight-normal mb-4">Financeiro</h3>
+              <div className="card card-body mb-4">
+                <div className="form-group">
+                  <label className="label-custom">Estado Financeiro</label>
+                  <div className="row">
+                    {data.financial.map((item) => (
+                      <div
+                        key={item.id}
+                        className="col-md-6"
+                        data-value={item.label}
+                      >
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={
+                                data.vehicle.vehicle_financial[item.value]
+                                  ? true
+                                  : false
+                              }
+                              onChange={() => {
+                                const checked = data.vehicle.vehicle_financial[
+                                  item.value
+                                ]
+                                  ? delete data.vehicle.vehicle_financial[
+                                      item.value
+                                    ]
+                                  : { [item.value]: item };
+                                dispatch(
+                                  change({
+                                    vehicle_financial: {
+                                      ...data.vehicle.vehicle_financial,
+                                      ...checked,
+                                    },
+                                  })
+                                );
+                              }}
+                            />
+                          }
+                          label={item.label}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="row">
+                  <div className="col-md-6 form-group">
+                    <label className="label-custom">PREÇO</label>
+                    <TextField
+                      type="tel"
+                      name="R$ "
+                      InputProps={{
+                        inputComponent: NumberFormatCustom,
+                        value: data.vehicle.vehicle_price || '',
+                        onChange: text => {
+                          dispatch(change({ vehicle_price: text.target.value }))
+                          if (data.error.vehicle_price) {
+                            delete data.error.vehicle_price
+                          }
+                        }
+                      }}
+                    />
+
+                    {(data.error.vehicle_price) &&
+                      <strong className="text-danger">
+                        {data.error.vehicle_price[0]}
+                      </strong>
+                    }
+                  </div>
+                </div>
+              </div>
+              
+              <h3 className="font-weight-normal mb-4">Título e descrição do anúncio</h3>
+              <div className="card card-body">
+                <div className="form-group">
+                  <label className="label-custom">TÍTULO</label>
+                  <TextField
+                    value={data.vehicle.title || ''}
+                    onChange={text => dispatch(change({ title: text.target.value }))}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="label-custom">DESCRIÇÃO</label>
+                  <TextField
+                    multiline
+                    rows="5"
+                    max-rows="5"
+                    value={data.vehicle.description || ''}
+                    onChange={text => dispatch(change({ description: text.target.value }))}
+                  />
+                </div>
+              </div>
+              
+              <div className="col-md-5"></div>
+            </div>
           </div>
         )}
       </div>

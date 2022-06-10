@@ -123,7 +123,7 @@ class DataScraping extends Controller
             }
         }
 
-        foreach ($data[11]->values_list as $features_car) {
+        foreach ($data[12]->values_list as $features_car) {
             $valid = Vehicle_features::where('value', $features_car->value)->where('vehicle_type_id', 2020)->first();
             $features_car->vehicle_type_id = 2020;
 
