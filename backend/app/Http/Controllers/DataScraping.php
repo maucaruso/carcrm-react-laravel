@@ -135,7 +135,7 @@ class DataScraping extends Controller
 
     public function moto()
     {
-        $data = json_decode(file_get_contents(public_path('2020.json')));
+        $data = json_decode(file_get_contents(public_path('2060.json')));
 
         foreach ($data[3]->values_list as $value) {
             $valid = Vehicle_cubiccms::where('value', $value->value)->first();

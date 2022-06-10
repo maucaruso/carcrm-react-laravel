@@ -7,6 +7,7 @@ import {
   MenuItem,
   InputAdornment,
 } from "@material-ui/core";
+import NumberFormat from 'react-number-format';
 import Header from "../../components/Header";
 import {
   store,
@@ -34,6 +35,23 @@ const TextMaskCustom = (props) => {
     />
   );
 };
+
+const NumberFormatCustom = (props) => {
+  const { inputRef, onChange, ...other } = props;
+  return (
+    <NumberFormat
+      {...other}
+      onValueChange={values => {
+        onChange({target: {
+          value: values.value
+        }})
+      }}
+      decimalSeparator=","
+      thousandSeparator="."
+      prefix={other.name}
+    />
+  )
+}
 
 export default function VehicleEdit(props) {
   const dispatch = useDispatch();
@@ -317,7 +335,7 @@ export default function VehicleEdit(props) {
                     error={data.error.vehicle_version && true}
                     value={data.vehicle.vehicle_version || ""}
                     onChange={(event) => {
-                      dispatch(change({ vehicle_version: event.target.value }))
+                      dispatch(change({ vehicle_version: event.target.value }));
                       if (data.error.vehicle_version) {
                         delete data.error.vehicle_version;
                       }
@@ -337,6 +355,162 @@ export default function VehicleEdit(props) {
                   )}
                 </div>
               </div>
+
+              <div className="card card-body mt-4 mb-4">
+                <div className="row">
+                  {/* INÍCIO MOSTRA SE FOR CARRO */}
+                  {data.vehicle.vehicle_type === 2020 && (
+                    <>
+                      <div className="col-md-6 form-group">
+                        <label className="label-custom">CÂMBIO</label>
+                        <Select
+                          value={data.vehicle.vehicle_gearbox}
+                          onChange={(event) =>
+                            dispatch(
+                              change({ vehicle_gearbox: event.target.value })
+                            )
+                          }
+                        >
+                          {data.gearbox.map((item) => (
+                            <MenuItem key={item.id} value={item.value}>
+                              {item.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </div>
+
+                      <div className="col-md-6 form-group">
+                        <label className="label-custom">COMBUSTÍVEL</label>
+                        <Select
+                          value={data.vehicle.vehicle_fuel}
+                          onChange={(event) =>
+                            dispatch(
+                              change({ vehicle_fuel: event.target.value })
+                            )
+                          }
+                        >
+                          {data.fuel.map((item) => (
+                            <MenuItem key={item.id} value={item.value}>
+                              {item.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </div>
+
+                      <div className="col-md-6 form-group">
+                        <label className="label-custom">DIREÇÃO</label>
+                        <Select
+                          value={data.vehicle.vehicle_steering}
+                          onChange={(event) =>
+                            dispatch(
+                              change({ vehicle_steering: event.target.value })
+                            )
+                          }
+                        >
+                          {data.car_steering.map((item) => (
+                            <MenuItem key={item.id} value={item.value}>
+                              {item.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </div>
+
+                      <div className="col-md-6 form-group">
+                        <label className="label-custom">
+                          POTÊNCIA DO MOTOR
+                        </label>
+                        <Select
+                          value={data.vehicle.vehicle_motorpower}
+                          onChange={(event) =>
+                            dispatch(
+                              change({ vehicle_motorpower: event.target.value })
+                            )
+                          }
+                        >
+                          {data.motorpower.map((item) => (
+                            <MenuItem key={item.id} value={item.value}>
+                              {item.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </div>
+
+                      <div className="col-md-6 form-group">
+                        <label className="label-custom">PORTAS</label>
+                        <Select
+                          value={data.vehicle.vehicle_doors}
+                          onChange={(event) =>
+                            dispatch(
+                              change({ vehicle_doors: event.target.value })
+                            )
+                          }
+                        >
+                          {data.doors.map((item) => (
+                            <MenuItem key={item.id} value={item.value}>
+                              {item.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </div>
+                    </>
+                  )}
+                  {/* FIM MOSTRA SE FOR CARRO */}
+
+                  {/* INÍCIO MOSTRA SE FOR MOTO */}
+                  {data.vehicle.vehicle_type === 2060 && (
+                    <div className="col-md-6 form-group">
+                      <label className="label-custom">CILINDRADAS</label>
+                      <Select
+                        value={data.vehicle.vehicle_cubiccms}
+                        onChange={(event) =>
+                          dispatch(
+                            change({ vehicle_cubiccms: event.target.value })
+                          )
+                        }
+                      >
+                        {data.cubiccms.map((item) => (
+                          <MenuItem key={item.id} value={item.value}>
+                            {item.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </div>
+                  )}
+                  {/* FIM MOSTRA SE FOR MOTO */}
+
+                  <div className="col-md-6 form-group">
+                    <label className="label-custom">COR</label>
+                    <Select
+                      value={data.vehicle.vehicle_color}
+                      onChange={(event) =>
+                        dispatch(
+                          change({ vehicle_color: event.target.value })
+                        )
+                      }
+                    >
+                      {data.carcolor.map((item) => (
+                        <MenuItem key={item.id} value={item.value}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </div>
+
+                  <div className="col-md-6 form-group">
+                    <label className="label-custom">QUILOMETRAGEM</label>
+                    <TextField 
+                      type="tel"
+                      InputProps={{
+                        inputComponent: NumberFormatCustom,
+                        value: data.vehicle.vehicle_mileage || '',
+                        onChange: (text) => dispatch(change({ vehicle_mileage: text.target.value }))
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              
             </div>
 
             <div className="col-md-5"></div>
