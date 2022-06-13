@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Vehicle_photos extends Model
 {
     use HasFactory;
+
+    protected $guarded = ['id'];
 }
