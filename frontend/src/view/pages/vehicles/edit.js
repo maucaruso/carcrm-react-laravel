@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import NumberFormat from "react-number-format";
 import Header from "../../components/Header";
+import { Confirm } from "../../components";
 import {
   store,
   show,
@@ -21,10 +22,35 @@ import {
   version,
   uploadPhoto,
   deletePhoto,
-  reorderPhoto
+  reorderPhoto,
 } from "../../../store/actions/vehicles.action";
 import MaskedInput from "react-text-mask";
-import { arrayMoveMutable } from 'array-move';
+import { SortableContainer, SortableElement } from "react-sortable-hoc";
+import { arrayMoveMutable } from "array-move";
+import { FaTrash } from "react-icons/fa";
+import { rootUrl } from "../../../config/App";
+
+const SortableItem = SortableElement(({ value }) => (
+  <div
+    className="bg-img"
+    style={{
+      backgroundImage:
+        "url(" +
+        rootUrl +
+        "/thumb/vehicles/" +
+        value.img +
+        "?u=" +
+        value.user_id +
+        "&s=" +
+        value.vehicle_id +
+        "&h=250&w=250)",
+    }}
+  ></div>
+));
+
+const SortableList = SortableContainer(({ children }) => {
+  return <div className="row">{children}</div>;
+});
 
 const TextMaskCustom = (props) => {
   const { inputRef, ...other } = props;
@@ -96,24 +122,34 @@ export default function VehicleEdit(props) {
   };
 
   const handleUpload = (event) => {
-    [...event.target.value].map(img => {
+    [...event.target.value].map((img) => {
       const body = new FormData();
-      body.append('file', img);
-      body.append('id', data.vehicle.id);
+      body.append("file", img);
+      body.append("id", data.vehicle.id);
 
       return dispatch(uploadPhoto(body));
     });
 
     if (data.error.photos && delete data.error.photos);
-  }
+  };
 
   const _deletePhoto = (id) => {
     setState({ isDeleted: id });
-    dispatch(deletePhoto(id)).then(res => res && setState({ isDeleted: null }));
-  }
+    dispatch(deletePhoto(id)).then(
+      (res) => res && setState({ isDeleted: null })
+    );
+  };
+
+  const handleConfirm = (event) => {
+    setState({ confirmEl: event.currentTarget });
+  };
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    let items = arrayMoveMutable(data.vehicle.vehicle_photos, oldIndex, newIndex);
+    let items = arrayMoveMutable(
+      data.vehicle.vehicle_photos,
+      oldIndex,
+      newIndex
+    );
     let data = items.map(({ id }) => id);
     dispatch(reorderPhoto({ order: data }, items));
   };
@@ -645,32 +681,38 @@ export default function VehicleEdit(props) {
                       name="R$ "
                       InputProps={{
                         inputComponent: NumberFormatCustom,
-                        value: data.vehicle.vehicle_price || '',
-                        onChange: text => {
-                          dispatch(change({ vehicle_price: text.target.value }))
+                        value: data.vehicle.vehicle_price || "",
+                        onChange: (text) => {
+                          dispatch(
+                            change({ vehicle_price: text.target.value })
+                          );
                           if (data.error.vehicle_price) {
-                            delete data.error.vehicle_price
+                            delete data.error.vehicle_price;
                           }
-                        }
+                        },
                       }}
                     />
 
-                    {(data.error.vehicle_price) &&
+                    {data.error.vehicle_price && (
                       <strong className="text-danger">
                         {data.error.vehicle_price[0]}
                       </strong>
-                    }
+                    )}
                   </div>
                 </div>
               </div>
-              
-              <h3 className="font-weight-normal mb-4">Título e descrição do anúncio</h3>
+
+              <h3 className="font-weight-normal mb-4">
+                Título e descrição do anúncio
+              </h3>
               <div className="card card-body">
                 <div className="form-group">
                   <label className="label-custom">TÍTULO</label>
                   <TextField
-                    value={data.vehicle.title || ''}
-                    onChange={text => dispatch(change({ title: text.target.value }))}
+                    value={data.vehicle.title || ""}
+                    onChange={(text) =>
+                      dispatch(change({ title: text.target.value }))
+                    }
                   />
                 </div>
 
@@ -680,12 +722,81 @@ export default function VehicleEdit(props) {
                     multiline
                     rows="5"
                     max-rows="5"
-                    value={data.vehicle.description || ''}
-                    onChange={text => dispatch(change({ description: text.target.value }))}
+                    value={data.vehicle.description || ""}
+                    onChange={(text) =>
+                      dispatch(change({ description: text.target.value }))
+                    }
                   />
                 </div>
               </div>
-              
+
+              <h3 className="font-weight-normal mb-4">Fotos</h3>
+              <div className="card card-body mb-5">
+                {data.error.photos && (
+                  <strong className="text-danger">
+                    {data.error.photos[0]}
+                  </strong>
+                )}
+
+                <SortableList axis="xy" onSortEnd={onSortEnd}>
+                  {data.vehicle.vehicle_photos.map((item, index) => (
+                    <div key={item.id} className="col-6 col-md-4">
+                      <div className="box-image d-flex justify-content-center align-items-center mt-3">
+                        {state.isDeleted === item.id ? (
+                          <CircularProgress size="30" color="secondary" />
+                        ) : (
+                          <>
+                            <span
+                              id="item.id"
+                              onClick={handleConfirm}
+                              className="d-flex justify-content-center align-items-center"
+                            >
+                              <div className="app-icon d-flex">
+                                <FaTrash color="#fff" size="1.2em" />
+                              </div>
+                            </span>
+
+                            <SortableItem
+                              key={"item" + item.id}
+                              index={index}
+                              value={item}
+                            />
+
+                            {Boolean(state.confirmEl) && (
+                              <Confirm
+                                open={item.id === parseInt(state.confirmEl.id)}
+                                onConfirm={() => _deletePhoto(item.id)}
+                                onClose={() => setState({ confirmEl: null })}
+                              />
+                            )}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="col-6 col-md-4">
+                    <div className="box-image box-upload d-flex justify-content-center align-items-center mt-3">
+                      <input
+                        onChange={handleUpload}
+                        type="file"
+                        multiple
+                        name="file"
+                        className="file-input"
+                      />
+                      {data.upload_photo ? (
+                        <CircularProgress />
+                      ) : (
+                        <p className="box-text">
+                          <span className="text-plus">+</span>
+                          <span>Adicionar fotos</span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </SortableList>
+              </div>
+
               <div className="col-md-5"></div>
             </div>
           </div>
