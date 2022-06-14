@@ -25,3 +25,14 @@ HttpAuth.interceptors.response.use(response => {
     }
   }
 });
+
+export const HttpUpload = Axios.create({
+  baseURL: apiUrl,
+});
+
+HttpUpload.interceptors.request.use(async (config) => {
+  config.headers.authorization =
+    "Bearer " + (await localStorage.getItem("access_token"));
+  config.headers['Content-Type'] = 'multipart/form-data';
+  return config;
+});

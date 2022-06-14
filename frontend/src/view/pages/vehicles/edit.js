@@ -19,8 +19,12 @@ import {
   brand,
   model,
   version,
+  uploadPhoto,
+  deletePhoto,
+  reorderPhoto
 } from "../../../store/actions/vehicles.action";
 import MaskedInput from "react-text-mask";
+import { arrayMoveMutable } from 'array-move';
 
 const TextMaskCustom = (props) => {
   const { inputRef, ...other } = props;
@@ -89,6 +93,29 @@ export default function VehicleEdit(props) {
         }
       });
     }
+  };
+
+  const handleUpload = (event) => {
+    [...event.target.value].map(img => {
+      const body = new FormData();
+      body.append('file', img);
+      body.append('id', data.vehicle.id);
+
+      return dispatch(uploadPhoto(body));
+    });
+
+    if (data.error.photos && delete data.error.photos);
+  }
+
+  const _deletePhoto = (id) => {
+    setState({ isDeleted: id });
+    dispatch(deletePhoto(id)).then(res => res && setState({ isDeleted: null }));
+  }
+
+  const onSortEnd = ({ oldIndex, newIndex }) => {
+    let items = arrayMoveMutable(data.vehicle.vehicle_photos, oldIndex, newIndex);
+    let data = items.map(({ id }) => id);
+    dispatch(reorderPhoto({ order: data }, items));
   };
 
   return (
