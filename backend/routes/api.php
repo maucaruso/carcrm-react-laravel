@@ -18,5 +18,5 @@ Route::group(['prefix' => 'webservice'], function() {
 });
 
 Route::group(['prefix' => 'upload'], function() {
-    Route::resource('vehicle', VehicleUploadController::class)->only(['create', 'update', 'destroy']);
+    Route::resource('vehicle', VehicleUploadController::class)->only(['store', 'update', 'destroy']);
 });

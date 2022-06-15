@@ -26,9 +26,10 @@ import {
 } from "../../../store/actions/vehicles.action";
 import MaskedInput from "react-text-mask";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
-import { arrayMoveMutable } from "array-move";
+import { arrayMoveImmutable } from "array-move";
 import { FaTrash } from "react-icons/fa";
 import { rootUrl } from "../../../config/App";
+import './style.css';
 
 const SortableItem = SortableElement(({ value }) => (
   <div
@@ -37,7 +38,7 @@ const SortableItem = SortableElement(({ value }) => (
       backgroundImage:
         "url(" +
         rootUrl +
-        "/thumb/vehicles/" +
+        "thumb/vehicles/" +
         value.img +
         "?u=" +
         value.user_id +
@@ -90,7 +91,6 @@ const NumberFormatCustom = (props) => {
 export default function VehicleEdit(props) {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.vehiclesReducer);
-  console.log(data);
   const [state, setState] = useState({
     isLoading: true,
     isLoadingCep: false,
@@ -102,27 +102,27 @@ export default function VehicleEdit(props) {
   });
 
   useEffect(() => {
-    index();
-  }, []);
+    const index = () => {
+      if (state.vehicle_id) {
+        dispatch(show(state.vehicle_id)).then((res) => {
+          if (res) {
+            setState({ isLoading: false });
+          }
+        });
+      } else {
+        dispatch(store()).then((res) => {
+          if (res) {
+            setState({ isLoading: false });
+          }
+        });
+      }
+    };
 
-  const index = () => {
-    if (state.vehicle_id) {
-      dispatch(show(state.vehicle_id)).then((res) => {
-        if (res) {
-          setState({ isLoading: false });
-        }
-      });
-    } else {
-      dispatch(store()).then((res) => {
-        if (res) {
-          setState({ isLoading: false });
-        }
-      });
-    }
-  };
+    index();
+  }, [dispatch, state.vehicle_id]);
 
   const handleUpload = (event) => {
-    [...event.target.value].map((img) => {
+    [...event.target.files].map((img) => {
       const body = new FormData();
       body.append("file", img);
       body.append("id", data.vehicle.id);
@@ -145,13 +145,13 @@ export default function VehicleEdit(props) {
   };
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
-    let items = arrayMoveMutable(
+    let items = arrayMoveImmutable(
       data.vehicle.vehicle_photos,
       oldIndex,
       newIndex
     );
-    let data = items.map(({ id }) => id);
-    dispatch(reorderPhoto({ order: data }, items));
+    let order = items.map(({ id }) => id);
+    dispatch(reorderPhoto({ order: order }, items));
   };
 
   return (
@@ -431,7 +431,7 @@ export default function VehicleEdit(props) {
                       <div className="col-md-6 form-group">
                         <label className="label-custom">CÂMBIO</label>
                         <Select
-                          value={data.vehicle.vehicle_gearbox}
+                          value={data.vehicle.vehicle_gearbox || ""}
                           onChange={(event) =>
                             dispatch(
                               change({ vehicle_gearbox: event.target.value })
@@ -449,7 +449,7 @@ export default function VehicleEdit(props) {
                       <div className="col-md-6 form-group">
                         <label className="label-custom">COMBUSTÍVEL</label>
                         <Select
-                          value={data.vehicle.vehicle_fuel}
+                          value={data.vehicle.vehicle_fuel || ""}
                           onChange={(event) =>
                             dispatch(
                               change({ vehicle_fuel: event.target.value })
@@ -467,7 +467,7 @@ export default function VehicleEdit(props) {
                       <div className="col-md-6 form-group">
                         <label className="label-custom">DIREÇÃO</label>
                         <Select
-                          value={data.vehicle.vehicle_steering}
+                          value={data.vehicle.vehicle_steering || ""}
                           onChange={(event) =>
                             dispatch(
                               change({ vehicle_steering: event.target.value })
@@ -487,7 +487,7 @@ export default function VehicleEdit(props) {
                           POTÊNCIA DO MOTOR
                         </label>
                         <Select
-                          value={data.vehicle.vehicle_motorpower}
+                          value={data.vehicle.vehicle_motorpower || ""}
                           onChange={(event) =>
                             dispatch(
                               change({ vehicle_motorpower: event.target.value })
@@ -505,7 +505,7 @@ export default function VehicleEdit(props) {
                       <div className="col-md-6 form-group">
                         <label className="label-custom">PORTAS</label>
                         <Select
-                          value={data.vehicle.vehicle_doors}
+                          value={data.vehicle.vehicle_doors || ""}
                           onChange={(event) =>
                             dispatch(
                               change({ vehicle_doors: event.target.value })
@@ -528,7 +528,7 @@ export default function VehicleEdit(props) {
                     <div className="col-md-6 form-group">
                       <label className="label-custom">CILINDRADAS</label>
                       <Select
-                        value={data.vehicle.vehicle_cubiccms}
+                        value={data.vehicle.vehicle_cubiccms || ""}
                         onChange={(event) =>
                           dispatch(
                             change({ vehicle_cubiccms: event.target.value })
@@ -548,7 +548,7 @@ export default function VehicleEdit(props) {
                   <div className="col-md-6 form-group">
                     <label className="label-custom">COR</label>
                     <Select
-                      value={data.vehicle.vehicle_color}
+                      value={data.vehicle.vehicle_color || ""}
                       onChange={(event) =>
                         dispatch(change({ vehicle_color: event.target.value }))
                       }
@@ -705,7 +705,7 @@ export default function VehicleEdit(props) {
               <h3 className="font-weight-normal mb-4">
                 Título e descrição do anúncio
               </h3>
-              <div className="card card-body">
+              <div className="card card-body mb-4">
                 <div className="form-group">
                   <label className="label-custom">TÍTULO</label>
                   <TextField
@@ -720,7 +720,7 @@ export default function VehicleEdit(props) {
                   <label className="label-custom">DESCRIÇÃO</label>
                   <TextField
                     multiline
-                    rows="5"
+                    minRows="5"
                     max-rows="5"
                     value={data.vehicle.description || ""}
                     onChange={(text) =>
@@ -747,9 +747,9 @@ export default function VehicleEdit(props) {
                         ) : (
                           <>
                             <span
-                              id="item.id"
+                              id={item.id}
                               onClick={handleConfirm}
-                              className="d-flex justify-content-center align-items-center"
+                              className="img-action d-flex justify-content-center align-items-center"
                             >
                               <div className="app-icon d-flex">
                                 <FaTrash color="#fff" size="1.2em" />

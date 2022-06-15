@@ -173,7 +173,7 @@ export const reorderPhotoResponse = (payload) => ({
 export const reorderPhoto = (pos, data) => dispatch => {
   dispatch(reorderPhotoResponse(data));
 
-  return HttpAuth.put('upload/vehicles/null', pos).then(res => {
+  return HttpAuth.put('upload/vehicle/null', pos).then(res => {
     if (typeof res !== 'undefined') {
       if (res.data.success) {
         dispatch(changeNotify({

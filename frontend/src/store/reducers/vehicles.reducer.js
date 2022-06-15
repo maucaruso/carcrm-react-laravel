@@ -53,7 +53,7 @@ const vehiclesReducer = (
         vehicle: {
           ...state.vehicle,
           vehicle_photos: [
-            ...state.vehicle.photos.concat(payload)
+            ...state.vehicle.vehicle_photos.concat(payload)
           ]
         }
       }
