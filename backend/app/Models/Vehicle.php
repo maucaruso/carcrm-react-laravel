@@ -15,7 +15,22 @@ class Vehicle extends Model
         'vehicle_financial' => Json::class,
     ];
 
-    protected $fillable = ['user_id'];
+    protected $guarded = ['id'];
+
+    static $rules = [
+        'zipCode' => 'required',
+        'city' => 'required',
+        'uf' => 'required',
+        'vehicle_type' => 'required',
+        'vehicle_brand' => 'required',
+        'vehicle_model' => 'required',
+        'vehicle_version' => 'required',
+        'vehicle_regdate' => 'required',
+        'vehicle_fuel' => 'required',
+        'vehicle_price' => 'required',
+        'vehicle_photos' => 'exists:vehicle_photos,vehicle_id'
+
+    ];
 
     public function vehicle_photos()
     {
