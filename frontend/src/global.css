@@ -22,3 +22,9 @@ a, a:hover {
 body {
   background-color: #eee;
 }
+
+@media (max-width: 576px) {
+  body {
+    margin-top: 56px;
+  }
+}

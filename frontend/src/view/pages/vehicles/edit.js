@@ -8,6 +8,7 @@ import {
   InputAdornment,
   FormControlLabel,
   Checkbox,
+  Button,
 } from "@material-ui/core";
 import NumberFormat from "react-number-format";
 import Header from "../../components/Header";
@@ -27,9 +28,10 @@ import {
 import MaskedInput from "react-text-mask";
 import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import { arrayMoveImmutable } from "array-move";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaSave } from "react-icons/fa";
 import { rootUrl } from "../../../config/App";
-import './style.css';
+import "./style.css";
+import { Link } from "react-router-dom";
 
 const SortableItem = SortableElement(({ value }) => (
   <div
@@ -106,13 +108,19 @@ export default function VehicleEdit(props) {
       if (state.vehicle_id) {
         dispatch(show(state.vehicle_id)).then((res) => {
           if (res) {
-            setState({ isLoading: false });
+            setState({
+              ...state,
+              isLoading: false,
+            });
           }
         });
       } else {
         dispatch(store()).then((res) => {
           if (res) {
-            setState({ isLoading: false });
+            setState({
+              ...state,
+              isLoading: false,
+            });
           }
         });
       }
@@ -134,14 +142,25 @@ export default function VehicleEdit(props) {
   };
 
   const _deletePhoto = (id) => {
-    setState({ isDeleted: id });
+    setState({
+      ...state,
+      isDeleted: id,
+    });
     dispatch(deletePhoto(id)).then(
-      (res) => res && setState({ isDeleted: null })
+      (res) =>
+        res &&
+        setState({
+          ...state,
+          isDeleted: null,
+        })
     );
   };
 
   const handleConfirm = (event) => {
-    setState({ confirmEl: event.currentTarget });
+    setState({
+      ...state,
+      confirmEl: event.currentTarget,
+    });
   };
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
@@ -156,7 +175,7 @@ export default function VehicleEdit(props) {
 
   return (
     <>
-      <Header title="Veículos - gestão" />
+      <Header title="Veículos - gestão" button={<Button color="inherit" className="ml-auto">Salvar</Button>} />
       <div className="container mt-4 pt-3">
         {state.isLoading ? (
           <div className="d-flex justify-content-center mt-5 pt-5">
@@ -170,7 +189,7 @@ export default function VehicleEdit(props) {
                 Localização do Veículo
               </h3>
 
-              <div className="card card-body">
+              <div className="card card-body" onClick={() => setState({ ...state, tips: 0 })}>
                 <div className="row">
                   <div className="col-md-7  form-group">
                     <label htmlFor="" className="label-custom">
@@ -187,9 +206,17 @@ export default function VehicleEdit(props) {
                           dispatch(change({ zipCode: text.target.value }));
 
                           if (text.target.value.length > 8) {
-                            setState({ isLoadingCep: true });
+                            setState({
+                              ...state,
+                              isLoadingCep: true,
+                            });
                             dispatch(cep(text.target.value)).then(
-                              (res) => res && setState({ isLoadingCep: false })
+                              (res) =>
+                                res &&
+                                setState({
+                                  ...state,
+                                  isLoadingCep: false,
+                                })
                             );
                             if (data.error.zipCode) {
                               delete data.error.zipCode;
@@ -250,7 +277,7 @@ export default function VehicleEdit(props) {
               </div>
 
               <h3 className="font-weight-normal mt-4 mb-4">Dados do Veículo</h3>
-              <div className="card card-body">
+              <div className="card card-body" onClick={() => setState({ ...state, tips: 1 })}>
                 <div className="form-group">
                   <label className="label-custom">CATEGORIA</label>
                   <Select
@@ -423,7 +450,7 @@ export default function VehicleEdit(props) {
                 </div>
               </div>
 
-              <div className="card card-body mt-4 mb-4">
+              <div className="card card-body mt-4 mb-4" onClick={() => setState({ ...state, tips: 1 })}>
                 <div className="row">
                   {/* INÍCIO MOSTRA SE FOR CARRO */}
                   {data.vehicle.vehicle_type === 2020 && (
@@ -581,7 +608,7 @@ export default function VehicleEdit(props) {
               {data.vehicle.vehicle_type && (
                 <>
                   <h3 className="font-weight-normal mb-4">Itens e opcionais</h3>
-                  <div className="card card-body mb-4">
+                  <div className="card card-body mb-4" onClick={() => setState({ ...state, tips: 1 })}>
                     <div className="row">
                       {data.features.map(
                         (item) =>
@@ -713,6 +740,7 @@ export default function VehicleEdit(props) {
                     onChange={(text) =>
                       dispatch(change({ title: text.target.value }))
                     }
+                    onFocus={() => setState({ ...state, tips: 2 })}
                   />
                 </div>
 
@@ -726,6 +754,7 @@ export default function VehicleEdit(props) {
                     onChange={(text) =>
                       dispatch(change({ description: text.target.value }))
                     }
+                    onFocus={() => setState({ ...state, tips: 3 })}
                   />
                 </div>
               </div>
@@ -766,7 +795,12 @@ export default function VehicleEdit(props) {
                               <Confirm
                                 open={item.id === parseInt(state.confirmEl.id)}
                                 onConfirm={() => _deletePhoto(item.id)}
-                                onClose={() => setState({ confirmEl: null })}
+                                onClose={() =>
+                                  setState({
+                                    ...state,
+                                    confirmEl: null,
+                                  })
+                                }
                               />
                             )}
                           </>
@@ -783,6 +817,7 @@ export default function VehicleEdit(props) {
                         multiple
                         name="file"
                         className="file-input"
+                        onClick={() => setState({ ...state, tips: 4 })}
                       />
                       {data.upload_photo ? (
                         <CircularProgress />
@@ -796,8 +831,79 @@ export default function VehicleEdit(props) {
                   </div>
                 </SortableList>
               </div>
+            </div>
 
-              <div className="col-md-5"></div>
+            <div className="col-md-5 d-none d-md-block">
+              <div className="tips">
+                <h3 className="font-weight-normal mb-4">Dicas</h3>
+
+                <div className="card card-body">
+                  {state.tips === 0 && (
+                    <>
+                      <h5>Endereço</h5>
+                      <p>
+                        O endereço é a primeira informação que os consumidores
+                        procuram quando estão pesquisando Veiculos. <br />
+                        <br />
+                        Anúncios com <strong>endereço</strong> terão mais
+                        oportunidades de serem exibidos nas novas formas de
+                        buscas, e receber mais contatos.
+                      </p>
+                    </>
+                  )}
+                  {state.tips === 1 && (
+                    <>
+                      <h5>Dados verídicos</h5>
+                      <p>
+                        Informe os dados corretos <br />
+                        (quilometragem, ano modelo, versão, etc.) <br />
+                        para conseguir o comprador rapidamente.
+                      </p>
+                    </>
+                  )}
+                  {state.tips === 2 && (
+                    <>
+                      <h5>Título</h5>
+                      <p>
+                        Sugerimos complementar o título com caracteristicas do
+                        seu carro.
+                        <br />
+                        Ex: Fiat Palio 2004 em perfeito estado.
+                      </p>
+                    </>
+                  )}
+                  {state.tips === 3 && (
+                    <>
+                      <h5>Descrição</h5>
+                      <p>
+                        Inclua caracteristicas do carro, como ar condicionado,
+                        vidros e travas elétricas, alarme, som, DVD, air bag
+                        duplo, IPVA pago, duvidas pendentes etc.
+                      </p>
+                    </>
+                  )}
+                  {state.tips === 4 && (
+                    <>
+                      <p>
+                        <strong>Fotos reais:</strong> Envie fotos reais do seu
+                        carro, assim aumenta suas chances de convencer o
+                        pontencial comprador.
+                        <br />
+                        <br />
+                        <strong>Todos os ângulos:</strong> Além das fotos do
+                        exterior do carro, não se esqueça de mostrar o interior.
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
+              
+              <div className="btn-save d-flex">
+                <Link to="/vehicles">
+                  <Button variant="contained" size="large" className="mr-2">Voltar</Button>
+                  <Button variant="contained" size="large" color="primary"><FaSave className="mr-3" size="1.5rem" /> Salvar</Button>
+                </Link>
+              </div>
             </div>
           </div>
         )}
