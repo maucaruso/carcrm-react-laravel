@@ -31,7 +31,7 @@ import { SortableContainer, SortableElement } from "react-sortable-hoc";
 import { arrayMoveImmutable } from "array-move";
 import { FaTrash, FaSave } from "react-icons/fa";
 import { rootUrl } from "../../../config/App";
-import "./style.css";
+import "./edit.modules.css";
 import { Link, Navigate } from "react-router-dom";
 
 const SortableItem = SortableElement(({ value }) => (
