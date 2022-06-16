@@ -62,6 +62,7 @@ export const show = (id) => (dispatch) => {
 // UPDATE
 
 export const update = (data) => (dispatch) => {
+  console.log(data);
   dispatch(
     changeLoading({
       open: true,

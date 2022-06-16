@@ -16,6 +16,7 @@ import { Confirm } from "../../components";
 import {
   store,
   show,
+  update,
   change,
   cep,
   brand,
@@ -31,7 +32,7 @@ import { arrayMoveImmutable } from "array-move";
 import { FaTrash, FaSave } from "react-icons/fa";
 import { rootUrl } from "../../../config/App";
 import "./style.css";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 const SortableItem = SortableElement(({ value }) => (
   <div
@@ -94,40 +95,27 @@ export default function VehicleEdit(props) {
   const dispatch = useDispatch();
   const data = useSelector((state) => state.vehiclesReducer);
   const [state, setState] = useState({
-    isLoading: true,
     isLoadingCep: false,
     isDeleted: null,
     redirect: false,
     tips: 0,
     confirmEl: null,
-    vehicle_id: props.match?.params?.id ? props.match.params.id : null,
   });
+  
+  const vehicle_id = props.match?.params?.id ? props.match.params.id : null;
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const index = () => {
-      if (state.vehicle_id) {
-        dispatch(show(state.vehicle_id)).then((res) => {
-          if (res) {
-            setState({
-              ...state,
-              isLoading: false,
-            });
-          }
-        });
+      if (vehicle_id) {
+        dispatch(show(vehicle_id)).then((res) => res && setIsLoading(false));
       } else {
-        dispatch(store()).then((res) => {
-          if (res) {
-            setState({
-              ...state,
-              isLoading: false,
-            });
-          }
-        });
+        dispatch(store()).then((res) => res && setIsLoading(false));
       }
     };
 
     index();
-  }, [dispatch, state.vehicle_id]);
+  }, [dispatch, vehicle_id]);
 
   const handleUpload = (event) => {
     [...event.target.files].map((img) => {
@@ -138,7 +126,7 @@ export default function VehicleEdit(props) {
       return dispatch(uploadPhoto(body));
     });
 
-    if (data.error.photos && delete data.error.photos);
+    if (data.error.vehicle_photos && delete data.error.vehicle_photos);
   };
 
   const _deletePhoto = (id) => {
@@ -175,9 +163,18 @@ export default function VehicleEdit(props) {
 
   return (
     <>
-      <Header title="Veículos - gestão" button={<Button color="inherit" className="ml-auto">Salvar</Button>} />
+      {(data.success) && <Navigate to="/vehicles" />}
+      
+      <Header
+        title="Veículos - gestão"
+        button={
+          <Button color="inherit" className="ml-auto">
+            Salvar
+          </Button>
+        }
+      />
       <div className="container mt-4 pt-3">
-        {state.isLoading ? (
+        {isLoading ? (
           <div className="d-flex justify-content-center mt-5 pt-5">
             {" "}
             <CircularProgress />{" "}
@@ -189,7 +186,10 @@ export default function VehicleEdit(props) {
                 Localização do Veículo
               </h3>
 
-              <div className="card card-body" onClick={() => setState({ ...state, tips: 0 })}>
+              <div
+                className="card card-body"
+                onClick={() => setState({ ...state, tips: 0 })}
+              >
                 <div className="row">
                   <div className="col-md-7  form-group">
                     <label htmlFor="" className="label-custom">
@@ -277,7 +277,10 @@ export default function VehicleEdit(props) {
               </div>
 
               <h3 className="font-weight-normal mt-4 mb-4">Dados do Veículo</h3>
-              <div className="card card-body" onClick={() => setState({ ...state, tips: 1 })}>
+              <div
+                className="card card-body"
+                onClick={() => setState({ ...state, tips: 1 })}
+              >
                 <div className="form-group">
                   <label className="label-custom">CATEGORIA</label>
                   <Select
@@ -450,7 +453,10 @@ export default function VehicleEdit(props) {
                 </div>
               </div>
 
-              <div className="card card-body mt-4 mb-4" onClick={() => setState({ ...state, tips: 1 })}>
+              <div
+                className="card card-body mt-4 mb-4"
+                onClick={() => setState({ ...state, tips: 1 })}
+              >
                 <div className="row">
                   {/* INÍCIO MOSTRA SE FOR CARRO */}
                   {data.vehicle.vehicle_type === 2020 && (
@@ -608,7 +614,10 @@ export default function VehicleEdit(props) {
               {data.vehicle.vehicle_type && (
                 <>
                   <h3 className="font-weight-normal mb-4">Itens e opcionais</h3>
-                  <div className="card card-body mb-4" onClick={() => setState({ ...state, tips: 1 })}>
+                  <div
+                    className="card card-body mb-4"
+                    onClick={() => setState({ ...state, tips: 1 })}
+                  >
                     <div className="row">
                       {data.features.map(
                         (item) =>
@@ -761,9 +770,9 @@ export default function VehicleEdit(props) {
 
               <h3 className="font-weight-normal mb-4">Fotos</h3>
               <div className="card card-body mb-5">
-                {data.error.photos && (
+                {data.error.vehicle_photos && (
                   <strong className="text-danger">
-                    {data.error.photos[0]}
+                    {data.error.vehicle_photos[0]}
                   </strong>
                 )}
 
@@ -897,12 +906,21 @@ export default function VehicleEdit(props) {
                   )}
                 </div>
               </div>
-              
+
               <div className="btn-save d-flex">
                 <Link to="/vehicles">
-                  <Button variant="contained" size="large" className="mr-2">Voltar</Button>
-                  <Button variant="contained" size="large" color="primary"><FaSave className="mr-3" size="1.5rem" /> Salvar</Button>
+                  <Button variant="contained" size="large" className="mr-2">
+                    Voltar
+                  </Button>
                 </Link>
+                <Button
+                  onClick={() => dispatch(update(data.vehicle))}
+                  variant="contained"
+                  size="large"
+                  color="primary"
+                >
+                  <FaSave className="mr-3" size="1.5rem" /> Salvar
+                </Button>
               </div>
             </div>
           </div>

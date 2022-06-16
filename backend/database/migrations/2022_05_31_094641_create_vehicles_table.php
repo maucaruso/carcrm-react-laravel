@@ -39,7 +39,7 @@ class CreateVehiclesTable extends Migration
             $table->integer('vehicle_mileage')->nullable();
             $table->json('vehicle_features')->nullable();
             $table->integer('vehicle_moto_features')->nullable();
-            $table->integer('vehicle_financial')->nullable();
+            $table->json('vehicle_financial')->nullable();
             $table->double('vehicle_price', 0, 2)->nullable();
             $table->string('title')->nullable();
             $table->longText('description')->nullable();
