@@ -1,7 +1,8 @@
 import React, { forwardRef, Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { index } from "../../../store/actions/vehicles.action";
+import { index, destroy } from "../../../store/actions/vehicles.action";
 import Header from "../../components/Header";
+import { Confirm } from "../../components";
 import { SCROOL, rootUrl } from "../../../config/App";
 import { Link } from "react-router-dom";
 import {
@@ -23,7 +24,8 @@ import {
   FaTrash,
   FaShare,
 } from "react-icons/fa";
-import './index.modules.css';
+import { FcOpenedFolder } from "react-icons/fc";
+import "./index.modules.css";
 
 export default function Vehicles() {
   const dispatch = useDispatch();
@@ -44,6 +46,11 @@ export default function Vehicles() {
         if (isLoadingMore && setIsLoadingMore);
       }
     });
+  };
+
+  const _destroy = (id) => {
+    setState({ isDeleted: id });
+    dispatch(destroy(id)).then((res) => res && setState({ isDeleted: null }));
   };
 
   const _handleLoadMore = () => {
@@ -82,6 +89,7 @@ export default function Vehicles() {
   useEffect(() => {
     document.addEventListener("scroll", _handleScroll);
     _index();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -113,10 +121,17 @@ export default function Vehicles() {
                 </div>
               )}
 
+              {vehicles.data.length < 1 && (
+                <div className="text-center mt-5 pt-5 mb-5 pb5">
+                  <FcOpenedFolder size="70" />
+                  <h6 className="mt-4 text-muted">Nenhum veículo encontrado</h6>
+                </div>
+              )}
+
               <div className="p-2 p-md-3">
                 {vehicles.data.map((item, index) => (
                   <Fragment key={index}>
-                    <div className="d-flex">
+                    <div className="d-flex mb-3">
                       <div className="vehicle-img d-flex justify-content-center align-items-center">
                         {state.isDeleted === item.id ? (
                           <CircularProgress color="secondary" />
@@ -179,39 +194,50 @@ export default function Vehicles() {
                             }
                             open={index === parseInt(state.menuEl.id)}
                             onClose={() => setState({ menuEl: null })}
-                            onClick={() => setState({ menuEl: null })}
                           >
                             <MenuItem>
-                              <FaClipboard size="1.2em" className="mr-4" />{" "}
+                              <FaClipboard size="1.2em" className="mr-4" />
                               Notas
                             </MenuItem>
 
                             <MenuItem>
-                              <FaUser size="1.2em" className="mr-4" />{" "}
+                              <FaUser size="1.2em" className="mr-4" />
                               Proprietário
                             </MenuItem>
 
                             <MenuItem>
-                              <FaLink size="1.2em" className="mr-4" />{" "}
+                              <FaLink size="1.2em" className="mr-4" />
                               Visualizar
                             </MenuItem>
 
                             <div className="dropdown-divider" />
 
                             <MenuItem>
-                              <FaPencilAlt size="1.2em" className="mr-4" />{" "}
-                              Editar
+                              <Link to={"/vehicles/" + item.id + "/edit"}>
+                                <FaPencilAlt size="1.2em" className="mr-4" />
+                                Editar
+                              </Link>
+                            </MenuItem>
+
+                            <MenuItem
+                              onClick={() => setState({ confirmEl: item.id })}
+                            >
+                              <FaTrash size="1.2em" className="mr-4" />
+                              Apagar
                             </MenuItem>
 
                             <MenuItem>
-                              <FaTrash size="1.2em" className="mr-4" /> Apagar
-                            </MenuItem>
-
-                            <MenuItem>
-                              <FaShare size="1.2em" className="mr-4" />{" "}
+                              <FaShare size="1.2em" className="mr-4" />
                               Compartilhar
                             </MenuItem>
                           </Menu>
+                        )}
+                        {state.confirmEl && (
+                          <Confirm
+                            open={item.id === state.confirmEl}
+                            onConfirm={() => _destroy(item.id)}
+                            onClose={() => setState({ confirmEl: null })}
+                          />
                         )}
                       </div>
                     </div>

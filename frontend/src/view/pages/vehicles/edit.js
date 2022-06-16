@@ -17,6 +17,7 @@ import {
   store,
   show,
   update,
+  indexResponse,
   change,
   cep,
   brand,
@@ -32,7 +33,7 @@ import { arrayMoveImmutable } from "array-move";
 import { FaTrash, FaSave } from "react-icons/fa";
 import { rootUrl } from "../../../config/App";
 import "./edit.modules.css";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 
 const SortableItem = SortableElement(({ value }) => (
   <div
@@ -101,8 +102,10 @@ export default function VehicleEdit(props) {
     tips: 0,
     confirmEl: null,
   });
-  
-  const vehicle_id = props.match?.params?.id ? props.match.params.id : null;
+
+  const { id } = useParams();
+
+  const vehicle_id = id ? id : null;
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -116,6 +119,13 @@ export default function VehicleEdit(props) {
 
     index();
   }, [dispatch, vehicle_id]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(indexResponse({ success: false }));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleUpload = (event) => {
     [...event.target.files].map((img) => {
@@ -163,8 +173,8 @@ export default function VehicleEdit(props) {
 
   return (
     <>
-      {(data.success) && <Navigate to="/vehicles" />}
-      
+      {data.success && <Navigate to="/vehicles" />}
+
       <Header
         title="Veículos - gestão"
         button={
@@ -195,15 +205,16 @@ export default function VehicleEdit(props) {
                     <label htmlFor="" className="label-custom">
                       CEP
                     </label>
+
                     <TextField
                       style={state.isLoadingCep ? { opacity: 0.5 } : {}}
-                      error={data.error.zipCode && true}
+                      error={data.error.zip_code && true}
                       type="tel"
                       InputProps={{
                         inputComponent: TextMaskCustom,
-                        value: data.vehicle.zipCode,
+                        value: data.vehicle.zip_code,
                         onChange: (text) => {
-                          dispatch(change({ zipCode: text.target.value }));
+                          dispatch(change({ zip_code: text.target.value }));
 
                           if (text.target.value.length > 8) {
                             setState({
@@ -218,8 +229,8 @@ export default function VehicleEdit(props) {
                                   isLoadingCep: false,
                                 })
                             );
-                            if (data.error.zipCode) {
-                              delete data.error.zipCode;
+                            if (data.error.zip_code) {
+                              delete data.error.zip_code;
                               delete data.error.uf;
                               delete data.error.city;
                             }
@@ -236,9 +247,9 @@ export default function VehicleEdit(props) {
                         ),
                       }}
                     />
-                    {data.error.zipCode && (
+                    {data.error.zip_code && (
                       <strong className="text-danger">
-                        {data.error.zipCode}
+                        {data.error.zip_code}
                       </strong>
                     )}
                   </div>

@@ -1,4 +1,20 @@
+.MuiMenuItem-root {
+  padding-top: 9px !important;
+  padding-bottom: 9px !important;
+  font-weight: 500;
+}
+
+.vehicle-img {
+  min-width: 180px;
+  min-height: 135px;
+}
+
 @media (max-width: 576px) {
+  .vehicle-img {
+    max-width: 100px !important;
+    min-height: 75px !important;
+  }
+  
   .vehicle-img img {
     max-width: 100px;
   }
@@ -20,10 +36,4 @@
     inset: 0px;
     background-color: rgba(0, 0, 0, 0.5);
   }
-}
-
-.MuiMenuItem-root {
-  padding-top: 9px !important;
-  padding-bottom: 9px !important;
-  font-weight: 500;
 }
