@@ -23,6 +23,7 @@
   z-index: 4;
   cursor: pointer;
   opacity: 0;
+  overflow: hidden;
 }
 
 .box-upload {

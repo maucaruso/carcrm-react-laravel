@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { blue } from '@material-ui/core/colors';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Routes from './Routes';
+import Navigation from './view/pages/navigation';
 
 import './global.css';
 import { Loading, Notify, Alert, Confirm } from './view/components';
@@ -32,6 +33,7 @@ const App = () => (
       <Loading />
       <Notify />
       <Alert />
+      <Navigation />
       {/*<Confirm open={true} onClose={() => alert('close')} onConfirm={() => alert('confirm')} />*/}
       <Routes />
     </ThemeProvider>

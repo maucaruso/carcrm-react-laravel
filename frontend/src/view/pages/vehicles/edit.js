@@ -178,7 +178,7 @@ export default function VehicleEdit(props) {
       <Header
         title="Veículos - gestão"
         button={
-          <Button color="inherit" className="ml-auto">
+          <Button color="inherit" className="ml-auto" onClick={() => dispatch(update(data.vehicle))}>
             Salvar
           </Button>
         }
