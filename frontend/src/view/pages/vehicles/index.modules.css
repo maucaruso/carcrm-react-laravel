@@ -9,6 +9,10 @@
   min-height: 135px;
 }
 
+.list-item + .list-item {
+  margin-top: 1rem;
+}
+
 @media (max-width: 576px) {
   .vehicle-img {
     max-width: 100px !important;

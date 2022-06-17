@@ -132,7 +132,7 @@ export default function Vehicles() {
               <div className="p-2 p-md-3">
                 {vehicles.data.map((item, index) => (
                   <Fragment key={index}>
-                    <div className="d-flex mb-3">
+                    <div className="d-flex list-item">
                       <div className="vehicle-img d-flex justify-content-center align-items-center">
                         {state.isDeleted === item.id ? (
                           <CircularProgress color="secondary" />

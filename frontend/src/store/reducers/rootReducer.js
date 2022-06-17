@@ -6,6 +6,7 @@ import authReducer from "./auth.reducer";
 import registerReducer from "./register.reducer";
 import vehiclesReducer from "./vehicles.reducer";
 import navigationReducer from './navigation.reducer';
+import notesReducer from "./notes.reducer";
 
 const rootReducer = combineReducers({
   loadingReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   registerReducer,
   vehiclesReducer,
   navigationReducer,
+  notesReducer
 });
 
 export default rootReducer;
