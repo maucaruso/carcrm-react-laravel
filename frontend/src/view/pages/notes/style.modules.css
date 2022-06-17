@@ -1,0 +1,11 @@
+.scroll, .scroll-form {
+  height: calc(100vh - 64px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-top: 64px;
+}
+
+.scroll-form {
+  height: calc(100vh - 140px);
+  margin-bottom: 76px;
+}

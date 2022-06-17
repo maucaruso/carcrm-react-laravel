@@ -1,7 +1,7 @@
 import React, { forwardRef, Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { index, destroy } from "../../../store/actions/vehicles.action";
-import { changeScreenA } from '../../../store/actions/navigation.action';
+import { changeScreenC } from '../../../store/actions/navigation.action';
 import Header from "../../components/Header";
 import { Confirm } from "../../components";
 import { SCROOL, rootUrl } from "../../../config/App";
@@ -53,6 +53,15 @@ export default function Vehicles() {
     setState({ isDeleted: id });
     dispatch(destroy(id)).then((res) => res && setState({ isDeleted: null }));
   };
+  
+  const notes = (id) => {
+    setState({ menuEl: null });
+    dispatch(changeScreenC({
+      open: true,
+      type: 'notes',
+      uid: id
+    }));
+  }
 
   const _handleLoadMore = () => {
     if (vehicles.current_page < vehicles.last_page) {
@@ -196,7 +205,7 @@ export default function Vehicles() {
                             open={index === parseInt(state.menuEl.id)}
                             onClose={() => setState({ menuEl: null })}
                           >
-                            <MenuItem onClick={() => dispatch(changeScreenA({ open: true }))}>
+                            <MenuItem onClick={() => notes(item.id)}>
                               <FaClipboard size="1.2em" className="mr-4" />
                               Notas
                             </MenuItem>
