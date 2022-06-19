@@ -12,15 +12,20 @@ import {
   IconButton,
   Typography,
   CircularProgress,
+  TextField,
+  Avatar,
 } from "@material-ui/core";
-import { MdKeyboardBackspace } from "react-icons/md";
-import { FcOpenedFolder } from 'react-icons/fc';
+import { MdKeyboardBackspace, MdClose, MdSave, MdSend } from "react-icons/md";
+import { FcOpenedFolder } from "react-icons/fc";
 
 import { useTheme } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
+import { format } from 'date-fns';
+import { pt } from 'date-fns/locale';
+import { zonedTimeToUtc } from 'date-fns-tz';
 
-import './style.modules.css';
+import "./style.modules.css";
 
 export default function Notes(props) {
   const dispatch = useDispatch();
@@ -57,6 +62,35 @@ export default function Notes(props) {
     });
   };
 
+  const _store = () => {
+    setState({ isLoading: true });
+    let data = {
+      uid: query.uid,
+      type: query.type,
+    };
+
+    dispatch(store({ ...data, ...note })).then((res) => {
+      if (res) {
+        dispatch(change("clear"));
+        setState({ isLoading: false });
+        document.getElementById("scroll").scroll({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+    });
+  };
+
+  const _update = () => {
+    setState({ isLoading: true });
+    dispatch(update(note)).then((res) => {
+      if (res) {
+        dispatch(change("clear"));
+        setState({ isLoading: false, isEdited: null });
+      }
+    });
+  };
+
   return (
     <>
       <AppBar position="absolute">
@@ -82,22 +116,95 @@ export default function Notes(props) {
           </div>
         ) : (
           <>
-            {(notes.data.length > 0) &&
+            {notes.data.length > 0 && (
               <div className="card-body">
                 <h6 className="m-0">
-                  {notes.total} {(notes.total > 1) ? 'notas encontradas' : 'nota encontrada'}
+                  {notes.total}{" "}
+                  {notes.total > 1 ? "notas encontradas" : "nota encontrada"}
                 </h6>
               </div>
-            }
-            
-            {(notes.data.length < 1) &&
+            )}
+
+            {notes.data.length < 1 && (
               <div className="text-center mt-5 mb-5 pt-5 pb-5">
-                <h6 className="mt-4 text-muted">
+                <span className="mt-4 text-muted">
                   <FcOpenedFolder size="70" />
                   <h6 className="mt-4 text-muted">Nenhuma nota encontrada</h6>
-                </h6>
+                </span>
               </div>
-            }
+            )}
+
+            {notes.data.map((item, index) => (
+              <Fragment key={index}>
+                <div
+                  className={
+                    state.isEdited === item.id || state.isDeleted === item.id
+                      ? "bg-selected"
+                      : ""
+                  }
+                >
+                  <div className="card-body d-flex align-items-center">
+                    <div className="d-none d-md-block">
+                      <Avatar className="bg-primary mr-4">
+                        {item.user.name.slice(0, 1)}
+                      </Avatar>
+                    </div>
+
+                    <div>
+                      <div className="alert alert-secondary mr-4 mb-1">
+                        {item.content}
+                      </div>
+                      <small>{format(zonedTimeToUtc(item.updated_at, 'America/Sao_Paulo'), "'Dia' dd 'de' MMMM', às ' HH:mm'h", { locale: pt })} por {item.user.name}</small>
+                    </div>
+                  </div>
+                </div>
+              </Fragment>
+            ))}
+
+            <div className="form">
+              <TextField
+                autoFocus
+                multiline
+                placeholder="Digite uma nota"
+                value={note.content || ""}
+                onChange={(text) =>
+                  dispatch(change({ content: text.target.value }))
+                }
+              />
+
+              <div className="send">
+                {state.isLoading ? (
+                  <CircularProgress />
+                ) : (
+                  <>
+                    {state.isEdited ? (
+                      <>
+                        <IconButton
+                          onClick={() => {
+                            dispatch(change("clear"));
+                            setState({ isEdited: null });
+                          }}
+                        >
+                          <MdClose />
+                        </IconButton>
+
+                        <IconButton onClick={() => note.content && _update()}>
+                          <MdSave
+                            color={note.content && theme.palette.secondary.main}
+                          />
+                        </IconButton>
+                      </>
+                    ) : (
+                      <IconButton onClick={() => note.content && _store()}>
+                        <MdSend
+                          color={note.content && theme.palette.secondary.main}
+                        />
+                      </IconButton>
+                    )}
+                  </>
+                )}
+              </div>
+            </div>
           </>
         )}
       </div>

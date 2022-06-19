@@ -9,3 +9,22 @@
   height: calc(100vh - 140px);
   margin-bottom: 76px;
 }
+
+.notes .form {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #fff;
+  padding: 5px 15px 15px;
+}
+
+.notes .send {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.notes .bg-selected {
+  background-color: #eee;
+  opacity: .5;
+}

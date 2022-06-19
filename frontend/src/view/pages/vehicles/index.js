@@ -59,7 +59,10 @@ export default function Vehicles() {
     dispatch(changeScreenC({
       open: true,
       type: 'notes',
-      uid: id
+      props: {
+        uid: id,
+        type: 'vehicles'
+      }
     }));
   }
 
