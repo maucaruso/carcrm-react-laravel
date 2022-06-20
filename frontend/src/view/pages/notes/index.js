@@ -14,16 +14,23 @@ import {
   CircularProgress,
   TextField,
   Avatar,
+  Menu,
+  MenuItem,
+  Slide,
+  Fade,
 } from "@material-ui/core";
 import { MdKeyboardBackspace, MdClose, MdSave, MdSend } from "react-icons/md";
+import { FaEllipsisV, FaTrash, FaPencilAlt } from "react-icons/fa";
 import { FcOpenedFolder } from "react-icons/fc";
 
 import { useTheme } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { Fragment, useEffect, useState } from "react";
-import { format } from 'date-fns';
-import { pt } from 'date-fns/locale';
-import { zonedTimeToUtc } from 'date-fns-tz';
+import { forwardRef, Fragment, useEffect, useState } from "react";
+import { format } from "date-fns";
+import { pt } from "date-fns/locale";
+import { zonedTimeToUtc } from "date-fns-tz";
+import { Confirm } from "../../components";
+import { SCROOL } from "../../../config/App";
 
 import "./style.modules.css";
 
@@ -50,10 +57,50 @@ export default function Notes(props) {
   });
 
   useEffect(() => {
+    document.getElementById("scroll").addEventListener("scroll", handleScroll);
+    return () =>
+      document
+        .getElementById("scroll")
+        .removeEventListener("scroll", handleScroll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     _index(isLoadingMore);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
+
+  useEffect(() => {
+    console.log('testeaaa');
+    if (isLoadingMore) {
+      setQuery({
+        ...query,
+        page: query.page + 1,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoadingMore]);
+
+  const handleScroll = (event) => {
+    let scrollTop =
+      event.srcElement.scrollHeight -
+      (event.srcElement.offsetHeight + event.srcElement.scrollTop);
+
+    if (scrollTop < SCROOL) {
+      if (!isLoadingMore && _handleLoadMore());
+    }
+  };
+
+  const _handleLoadMore = () => {
+    if (notes.current_page < notes.last_page || !notes.current_page) {
+      setIsLoadingMore(true);
+    }
+  };
+
+  const _handleMenu = (event) => {
+    setState({ menuEl: event.currentTarget });
+  };
 
   const _index = (loadMore) => {
     dispatch(index(query, loadMore)).then((res) => {
@@ -81,15 +128,27 @@ export default function Notes(props) {
     });
   };
 
+  const _edit = (item) => {
+    setState({ isEdited: item.id, menuEl: null });
+    dispatch(change(item));
+  };
+
   const _update = () => {
     setState({ isLoading: true });
-    dispatch(update(note)).then((res) => {
-      if (res) {
-        dispatch(change("clear"));
-        setState({ isLoading: false, isEdited: null });
-      }
+    dispatch(update(note)).then(() => {
+      dispatch(change("clear"));
+      setState({ isLoading: false, isEdited: null });
     });
   };
+
+  const _destroy = (id) => {
+    setState({ isDeleted: id, menuEl: null });
+    dispatch(destroy(id)).then((res) => res && setState({ isDeleted: null }));
+  };
+
+  const Transition = forwardRef((props, ref) => {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
 
   return (
     <>
@@ -154,10 +213,67 @@ export default function Notes(props) {
                       <div className="alert alert-secondary mr-4 mb-1">
                         {item.content}
                       </div>
-                      <small>{format(zonedTimeToUtc(item.updated_at, 'America/Sao_Paulo'), "'Dia' dd 'de' MMMM', às ' HH:mm'h", { locale: pt })} por {item.user.name}</small>
+                      <small>
+                        {format(
+                          zonedTimeToUtc(item.updated_at, "America/Sao_Paulo"),
+                          "'Dia' dd 'de' MMMM', às ' HH:mm'h",
+                          { locale: pt }
+                        )}{" "}
+                        por {item.user.name}
+                      </small>
+                    </div>
+
+                    <div className="ml-auto">
+                      {state.isDeleted === item.id ? (
+                        <CircularProgress className="mr-2" color="secondary" />
+                      ) : (
+                        <>
+                          <div>
+                            <IconButton id={index} onClick={_handleMenu}>
+                              <FaEllipsisV />
+                            </IconButton>
+                          </div>
+
+                          {Boolean(state.menuEl) && (
+                            <Menu
+                              anchorEl={state.menuEl}
+                              transformOrigin={{
+                                vertical: "top",
+                                horizontal: "right",
+                              }}
+                              TransitionComponent={
+                                window.innerWidth < 577 ? Transition : Fade
+                              }
+                              open={index === parseInt(state.menuEl.id)}
+                              onClose={() => setState({ menuEl: null })}
+                            >
+                              <MenuItem onClick={() => _edit(item)}>
+                                <FaPencilAlt size="1.2em" className="mr-4" />{" "}
+                                Editar
+                              </MenuItem>
+
+                              <MenuItem
+                                onClick={() => setState({ confirmEl: item.id })}
+                              >
+                                <FaTrash size="1.2em" className="mr-4" /> Apagar
+                              </MenuItem>
+                            </Menu>
+                          )}
+
+                          {state.confirmEl && (
+                            <Confirm
+                              open={item.id === state.confirmEl}
+                              onConfirm={() => _destroy(item.id)}
+                              onClose={() => setState({ confirmEl: null })}
+                            />
+                          )}
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
+
+                <hr className="m-0" />
               </Fragment>
             ))}
 
