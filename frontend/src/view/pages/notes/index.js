@@ -58,13 +58,15 @@ export default function Notes(props) {
   });
 
   useEffect(() => {
-    document.getElementById("scroll").addEventListener("scroll", handleScroll);
-    return () =>
-      document
-        .getElementById("scroll")
-        .removeEventListener("scroll", handleScroll);
+    const scrollEl = document.getElementById("scroll");
+
+    scrollEl.addEventListener("scroll", handleScroll);
+    
+    return () => {
+      scrollEl.removeEventListener("scroll", handleScroll);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [notes]);
+  }, [notes, isLoadingMore]);
 
   useEffect(() => {
     _index(isLoadingMore);
