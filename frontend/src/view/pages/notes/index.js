@@ -72,7 +72,7 @@ export default function Notes(props) {
   }, [query]);
 
   useEffect(() => {
-    console.log('testeaaa');
+    console.log("testeaaa");
     if (isLoadingMore) {
       setQuery({
         ...query,
@@ -276,6 +276,12 @@ export default function Notes(props) {
                 <hr className="m-0" />
               </Fragment>
             ))}
+
+            {isLoadingMore && (
+              <div className="text-center card-body">
+                <CircularProgress />
+              </div>
+            )}
 
             <div className="form">
               <TextField
