@@ -1,3 +1,5 @@
+import { forwardRef, Fragment, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   index,
   store,
@@ -24,8 +26,6 @@ import { FaEllipsisV, FaTrash, FaPencilAlt } from "react-icons/fa";
 import { FcOpenedFolder } from "react-icons/fc";
 
 import { useTheme } from "@material-ui/core/styles";
-import { useDispatch, useSelector } from "react-redux";
-import { forwardRef, Fragment, useEffect, useState } from "react";
 import { format } from "date-fns";
 import { pt } from "date-fns/locale";
 import { zonedTimeToUtc } from "date-fns-tz";
@@ -37,6 +37,7 @@ import "./style.modules.css";
 export default function Notes(props) {
   const dispatch = useDispatch();
   const notes = useSelector((state) => state.notesReducer.notes);
+
   const note = useSelector((state) => state.notesReducer.note);
   const theme = useTheme();
 
@@ -63,7 +64,7 @@ export default function Notes(props) {
         .getElementById("scroll")
         .removeEventListener("scroll", handleScroll);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [notes]);
 
   useEffect(() => {
     _index(isLoadingMore);
@@ -72,7 +73,6 @@ export default function Notes(props) {
   }, [query]);
 
   useEffect(() => {
-    console.log("testeaaa");
     if (isLoadingMore) {
       setQuery({
         ...query,
@@ -93,7 +93,7 @@ export default function Notes(props) {
   };
 
   const _handleLoadMore = () => {
-    if (notes.current_page < notes.last_page || !notes.current_page) {
+    if (notes.current_page < notes.last_page) {
       setIsLoadingMore(true);
     }
   };
