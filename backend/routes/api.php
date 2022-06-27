@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\NotesController;
+use App\Http\Controllers\Api\OwnersController;
 use App\Http\Controllers\Api\Uploads\VehicleUploadController;
 use App\Http\Controllers\Api\VehiclesController;
 use App\Http\Controllers\webservice\WebserviceController;
@@ -8,7 +9,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResources([
     'vehicles' => VehiclesController::class,
-    'notes' => NotesController::class
+    'notes' => NotesController::class,
+    'owners' => OwnersController::class,
 ]);
 
 Route::get('vehicles/{vehicle_type}/brand', [VehiclesController::class, 'brand']);
