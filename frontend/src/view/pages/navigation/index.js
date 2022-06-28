@@ -2,6 +2,8 @@ import { changeScreenA, changeScreenB, changeScreenC } from '../../../store/acti
 import { useDispatch, useSelector } from 'react-redux';
 import { Drawer } from '@material-ui/core';
 import Notes from '../notes';
+import Owners from '../owners';
+import OwnerEdit from '../owners/edit';
 
 const style = {
   width: '680px',
@@ -19,7 +21,14 @@ export default function Navigation() {
         open={nav.screenA.open}
         onClose={() => dispatch(changeScreenA({ open: false }))}
       >
-        <div style={style}></div>
+        <div style={style}>
+          {(nav.screenA.type === 'owners' &&
+            <Owners
+              type={nav.screenA.type}
+              props={nav.screenA.props}
+            />
+          )}
+        </div>
       </Drawer>
       
       <Drawer
@@ -27,7 +36,14 @@ export default function Navigation() {
         open={nav.screenB.open}
         onClose={() => dispatch(changeScreenB({ open: false }))}
       >
-        <div style={style}></div>
+        <div style={style}>
+          {(nav.screenB.type === "owner-edit") &&
+            <OwnerEdit
+              uid={nav.screenB.props.uid}
+              props={nav.screenB.props}
+            />
+          }
+        </div>
       </Drawer>
       
       <Drawer

@@ -26,10 +26,14 @@ import {
   FaAngleDown
 } from "react-icons/fa";
 import { MdMenu } from "react-icons/md";
+import { useDispatch } from 'react-redux';
+import { changeScreenA } from "../../../store/actions/navigation.action";
 
 import "./style.modules.css";
 
 export default function Header(props) {
+  const dispatch = useDispatch();
+  
   const [state, setState] = useState({
     open: false,
   });
@@ -38,6 +42,14 @@ export default function Header(props) {
     site: false,
     financeiro: false,
   });
+  
+  const handlePage = (page) => {
+    dispatch(changeScreenA({
+      open: true,
+      type: page,
+      props: {}
+    }));
+  }
 
   return (
     <>
@@ -71,7 +83,7 @@ export default function Header(props) {
               </li>
 
               <li className="nav-item">
-                <button className="nav-link bg-transparent" to="/vehicles">
+                <button onClick={() => handlePage('owners')} className="nav-link bg-transparent" to="/vehicles">
                   <FaUsers className="icon-lg mr-2" /> Proprietários
                 </button>
               </li>
