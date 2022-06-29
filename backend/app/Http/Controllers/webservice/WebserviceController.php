@@ -26,7 +26,9 @@ class WebserviceController extends Controller
         $data = (object) [
             'uf' => $response->uf,
             'zipCode' => $response->cep,
-            'city' => $response->localidade
+            'city' => $response->localidade,
+            'neighborhood' => $response->bairro,
+            'street' => $response->logradouro,
         ];
 
         return json_encode($data);

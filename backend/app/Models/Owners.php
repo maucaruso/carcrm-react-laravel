@@ -20,6 +20,11 @@ class Owners extends Model
 
     public function setBirthAttribute($value)
     {
-        $this->attribute['birth'] = Carbon::parse($value);
+        $this->attributes['birth'] = ($value) ? Carbon::parse($value)->format('Y-m-d') : null;
+    }
+
+    public function getBirthAttribute($value)
+    {
+        return Carbon::createFromFormat('Y-m-d', $value, 'America/Sao_Paulo');
     }
 }

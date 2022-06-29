@@ -96,9 +96,8 @@ const TextMaskCustom = (props) => {
         ];
       }
     }
-    
   }
-  
+
   if (props.name === "cep") {
     mask = [/[0-9]/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/];
   }
@@ -120,7 +119,7 @@ export default function OwnerEdit(props) {
   const owner = useSelector((state) => state.ownersReducer.owner);
   const error = useSelector((state) => state.ownersReducer.error);
   const response = useSelector((state) => state.ownersReducer.success);
-  const owner_id = props.owner_id ? props.owner_id : null;
+  const owner_id = props.uid ? props.uid : null;
 
   const [isLoading, setLoading] = useState(true);
   const [isLoadingCep, setLoadingCep] = useState(false);
@@ -140,7 +139,7 @@ export default function OwnerEdit(props) {
 
   const _index = () => {
     if (owner_id) {
-      dispatch(show(owner_id)).then((res) => res && setLoadingCep(false));
+      dispatch(show(owner_id)).then((res) => res && setLoading(false));
     } else {
       dispatch(change("clear"));
       setLoading(false);
@@ -375,8 +374,8 @@ export default function OwnerEdit(props) {
                   inputComponent: TextMaskCustom,
                   value: owner.zip_code,
                   onChange: (text) => {
-                    dispatch(change({ zip_code: text.target.value }))
-                    
+                    dispatch(change({ zip_code: text.target.value }));
+
                     if (text.target.value.length > 8) {
                       setLoadingCep(true);
                       dispatch(cep(text.target.value)).then((res) =>
@@ -391,6 +390,58 @@ export default function OwnerEdit(props) {
                   ),
                 }}
               />
+            </div>
+
+            <div className="row">
+              <div className="col-md-9">
+                <div className="form-group">
+                  <label className="label-custom">CIDADE</label>
+                  <TextField disabled value={owner.city || ""} />
+                </div>
+              </div>
+
+              <div className="col-md-3">
+                <div className="form-group">
+                  <label className="label-custom">UF</label>
+                  <TextField disabled value={owner.uf || ""} />
+                </div>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="label-custom">BAIRRO</label>
+              <TextField
+                value={owner.neighborhood || ""}
+                onChange={(text) =>
+                  dispatch(change({ neighborhood: text.target.value }))
+                }
+              />
+            </div>
+
+            <div className="row">
+              <div className="col-md-9">
+                <div className="form-group">
+                  <label className="label-custom">RUA</label>
+                  <TextField
+                    value={owner.street || ""}
+                    onChange={(text) =>
+                      dispatch(change({ street: text.target.value }))
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="col-md-3">
+                <div className="form-group">
+                  <label className="label-custom">N°</label>
+                  <TextField
+                    value={owner.streetNumber || ""}
+                    onChange={(text) =>
+                      dispatch(change({ streetNumber: text.target.value }))
+                    }
+                  />
+                </div>
+              </div>
             </div>
           </>
         )}

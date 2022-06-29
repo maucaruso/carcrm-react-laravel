@@ -36,11 +36,11 @@ export const indexResponse = (payload, isLoadMore) => ({
   isLoadMore,
 });
 
-export const index = (query, isLoadMore) => {
+export const index = (query, isLoadMore) => (dispatch) => {
   return HttpAuth.get("/owners?" + new URLSearchParams(query)).then(
     (res) =>
       typeof res !== "undefined" &&
-      dispatchEvent(indexResponse(res.data, isLoadMore))
+      dispatch(indexResponse(res.data, isLoadMore))
   );
 };
 
