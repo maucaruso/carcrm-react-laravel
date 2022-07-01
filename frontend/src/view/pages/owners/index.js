@@ -136,6 +136,19 @@ export default function Owners() {
     );
   };
 
+  const _show = (item) => {
+    setState({ menuEl: null });
+    dispatch(
+      changeScreenB({
+        open: true,
+        type: "owner-show",
+        props: {
+          item,
+        },
+      })
+    );
+  };
+
   const _notes = (id) => {
     setState({ menuEl: null });
     dispatch(
@@ -205,15 +218,14 @@ export default function Owners() {
               {owners.data.map((item, index) => (
                 <React.Fragment key={index}>
                   <ListItem button selected={state.isDeleted === item.id}>
-                    <ListItemAvatar>
+                    <ListItemAvatar onClick={() => _show(item)}>
                       <Avatar className="bg-primary">
                         {item.name.slice(0, 1)}
                       </Avatar>
-                      
                     </ListItemAvatar>
-                    
-                    <ListItemText className="pb-3 pt-3" primary={item.name} />
-                    
+
+                    <ListItemText onClick={() => _show(item)} className="pb-3 pt-3" primary={item.name} />
+
                     {state.isDeleted === item.id && (
                       <CircularProgress color="secondary" className="mr-2" />
                     )}

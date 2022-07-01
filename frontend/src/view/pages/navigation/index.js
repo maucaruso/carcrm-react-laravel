@@ -4,6 +4,7 @@ import { Drawer } from '@material-ui/core';
 import Notes from '../notes';
 import Owners from '../owners';
 import OwnerEdit from '../owners/edit';
+import OwnerShow from '../owners/show';
 
 const style = {
   width: '680px',
@@ -42,6 +43,10 @@ export default function Navigation() {
               uid={nav.screenB.props.uid}
               props={nav.screenB.props}
             />
+          }
+          
+          {(nav.screenB.type === "owner-show") &&
+            <OwnerShow item={nav.screenB.props.item} />
           }
         </div>
       </Drawer>
