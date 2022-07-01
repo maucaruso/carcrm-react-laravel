@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Avatar,
   Button,
@@ -17,7 +17,7 @@ import { useDispatch } from "react-redux";
 import "./owner.modules.css";
 import { Confirm } from "../../components";
 import { changeScreenA } from "../../../store/actions/navigation.action";
-import { update, updateResponse } from "../../../store/actions/vehicles.action";
+import { indexResponse, update, updateResponse } from "../../../store/actions/vehicles.action";
 
 export default function Owner(props) {
   const dispatch = useDispatch();
@@ -27,6 +27,13 @@ export default function Owner(props) {
     isDeleted: null,
     confirmEl: null,
   });
+  
+  useEffect(() => {
+    return () => {
+      dispatch(indexResponse({ success: false }));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const _owners = (vehicle_id) => {
     dispatch(
@@ -79,7 +86,7 @@ export default function Owner(props) {
             {state.isDeleted === item.vehicle_owner.id ? (
               <CircularProgress color="secondary" className="mr-2" />
             ) : (
-              <IconButton className="ml-auto">
+              <IconButton onClick={() => setState({ confirmEl: item.vehicle_owner.id })} className="ml-auto">
                 <MdDelete />
               </IconButton>
             )}

@@ -248,7 +248,7 @@ export default function Owners(props) {
                       <Confirm
                         open={item.id === state.confirmOwnerEl}
                         onConfirm={() => {
-                          props.onSelected(item);
+                          props.props.onSelected(item);
                           dispatch(changeScreenA({ open: false }));
                         }}
                         onClose={() => setState({ confirmOwnerEl: null })}

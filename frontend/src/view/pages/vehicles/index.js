@@ -253,7 +253,7 @@ export default function Vehicles() {
                         {state.confirmEl && (
                           <Confirm
                             open={item.id === state.confirmEl}
-                            onConfirm={() => onSelected(item.id)}
+                            onConfirm={() => _destroy(item.id)}
                             onClose={() => setState({ confirmEl: null })}
                           />
                         )}
