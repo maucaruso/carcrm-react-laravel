@@ -372,9 +372,9 @@ export default function OwnerEdit(props) {
                 name="cep"
                 InputProps={{
                   inputComponent: TextMaskCustom,
-                  value: owner.zip_code,
+                  value: owner.zipcode,
                   onChange: (text) => {
-                    dispatch(change({ zip_code: text.target.value }));
+                    dispatch(change({ zipcode: text.target.value }));
 
                     if (text.target.value.length > 8) {
                       setLoadingCep(true);

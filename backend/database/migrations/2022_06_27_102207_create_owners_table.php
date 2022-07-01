@@ -25,13 +25,13 @@ class CreateOwnersTable extends Migration
             $table->string('cnpj')->nullable();
             $table->string('ie')->nullable();
             $table->string('email')->nullable();
-            $table->string('phone', 15)->nullable();
-            $table->string('phone2', 15)->nullable();
-            $table->string('phone3', 15)->nullable();
+            $table->string('phone', 16)->nullable();
+            $table->string('phone2', 16)->nullable();
+            $table->string('phone3', 16)->nullable();
             $table->string('zipcode', 9)->nullable();
             $table->string('uf', 2)->nullable();
             $table->string('city')->nullable();
-            $table->string('neightborhood')->nullable();
+            $table->string('neighborhood')->nullable();
             $table->string('street')->nullable();
             $table->string('streetNumber')->nullable();
 

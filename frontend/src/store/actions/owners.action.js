@@ -95,7 +95,7 @@ export const updateResponse = (payload) => ({
 export const update = (data) => (dispatch) => {
   dispatch(changeLoading({ open: true }));
 
-  return HttpAuth.put("/owners" + data.id, data).then((res) => {
+  return HttpAuth.put("/owners/" + data.id, data).then((res) => {
     dispatch(changeLoading({ open: false }));
 
     if (res.data.error) {

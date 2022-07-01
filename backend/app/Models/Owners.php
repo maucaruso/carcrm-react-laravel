@@ -25,6 +25,6 @@ class Owners extends Model
 
     public function getBirthAttribute($value)
     {
-        return Carbon::createFromFormat('Y-m-d', $value, 'America/Sao_Paulo');
+        return ($value) ? Carbon::createFromFormat('Y-m-d', $value, 'America/Sao_Paulo') : null;
     }
 }
