@@ -4,6 +4,7 @@ import { changeNotify } from "./notify.action";
 
 export const actionTypes = {
   INDEX: "VEHICLE_INDEX",
+  UPDATE: "VEHICLE_UPDATE",
   DESTROY: "VEHICLE_DESTROY",
   CHANGE: "VEHICLE_CHANGE",
   UPLOAD_PHOTO: "VEHICLE_UPLOAD_PHOTO",
@@ -60,6 +61,11 @@ export const show = (id) => (dispatch) => {
 };
 
 // UPDATE
+
+export const updateResponse = (payload) => ({
+  type: actionTypes.UPDATE,
+  payload,
+});
 
 export const update = (data) => (dispatch) => {
   dispatch(

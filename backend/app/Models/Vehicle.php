@@ -41,6 +41,11 @@ class Vehicle extends Model
         return $this->hasOne('App\Models\Vehicle_brand', 'value', 'vehicle_brand');
     }
 
+    public function vehicle_owner()
+    {
+        return $this->hasOne('App\Models\Owners', 'id', 'vehicle_vehicle_owner');
+    }
+
     public function vehicle_model()
     {
         return Vehicle_model::where('value', $this->vehicle_model)->where('brand_id', $this->vehicle_brand)->first();

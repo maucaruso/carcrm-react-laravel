@@ -54,6 +54,7 @@ class VehiclesController extends Controller
     {
         $vehicles = Vehicle::where('user_id', $this->user->id)->where('status', 1)->with(
             'cover',
+            'vehicle_owner',
             'vehicle_brand',
             'vehicle_fuel',
             'vehicle_color',
@@ -102,14 +103,23 @@ class VehiclesController extends Controller
 
     public function update(Request $request, $id)
     {
+        $vehicle = Vehicle::where('user_id', $this->user->id)->find($id);
+
+        if ($request->updateOwner) {
+            $vehicle->vehicle_owner = $request->vehicle_owner;
+            if ($vehicle->save) {
+                if ($vehicle->save()) {
+                    return $this->success('Dados atualizados com sucesso');
+                }
+            }
+        }
+
         $request['vehicle_photos'] = $id;
         $validator = Validator::make($request->all(), Vehicle::$rules);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 200);
         }
-
-        $vehicle = Vehicle::where('user_id', $this->user->id)->find($id);
 
         if ($vehicle->id) {
             $vehicle->fill($request->all());

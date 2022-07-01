@@ -24,7 +24,7 @@ import {
   FaPlus,
   FaTrash,
 } from "react-icons/fa";
-import { MdKeyboardBackspace, MdMoreHoriz } from "react-icons/md";
+import { MdKeyboardBackspace, MdMoreHoriz, MdPersonAdd } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { index, destroy } from "../../../store/actions/owners.action";
 import {
@@ -38,9 +38,10 @@ import "./style.modules.css";
 import { FcOpenedFolder } from "react-icons/fc";
 import { Confirm } from "../../components";
 
-export default function Owners() {
+export default function Owners(props) {
   const dispatch = useDispatch();
   const owners = useSelector((state) => state.ownersReducer.owners);
+  const vehicle_id = props.props.vehicle_id || null;
 
   const [isLoading, setLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -52,6 +53,7 @@ export default function Owners() {
     isDeleted: null,
     menuEl: null,
     confirmEl: null,
+    confirmOwnerEl: null,
   });
 
   useEffect(() => {
@@ -224,13 +226,37 @@ export default function Owners() {
                       </Avatar>
                     </ListItemAvatar>
 
-                    <ListItemText onClick={() => _show(item)} className="pb-3 pt-3" primary={item.name} />
+                    <ListItemText
+                      onClick={() => _show(item)}
+                      className="pb-3 pt-3"
+                      primary={item.name}
+                    />
 
                     {state.isDeleted === item.id && (
                       <CircularProgress color="secondary" className="mr-2" />
                     )}
 
-                    {!state.isDeleted && (
+                    {vehicle_id && (
+                      <IconButton
+                        onClick={() => setState({ confirmOwnerEl: item.id })}
+                      >
+                        <MdPersonAdd />
+                      </IconButton>
+                    )}
+
+                    {state.confirmOwnerEl && (
+                      <Confirm
+                        open={item.id === state.confirmOwnerEl}
+                        onConfirm={() => {
+                          props.onSelected(item);
+                          dispatch(changeScreenA({ open: false }));
+                        }}
+                        onClose={() => setState({ confirmOwnerEl: null })}
+                        title="Deseja adicionar esse proprietário ao veículo?"
+                      />
+                    )}
+
+                    {!state.isDeleted && !vehicle_id && (
                       <div>
                         <div>
                           <IconButton id={index} onClick={_handleMenu}>

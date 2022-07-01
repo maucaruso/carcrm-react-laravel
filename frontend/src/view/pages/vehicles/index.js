@@ -1,7 +1,7 @@
 import React, { forwardRef, Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { index, destroy } from "../../../store/actions/vehicles.action";
-import { changeScreenC } from '../../../store/actions/navigation.action';
+import { changeScreenC } from "../../../store/actions/navigation.action";
 import Header from "../../components/Header";
 import { Confirm } from "../../components";
 import { SCROOL, rootUrl } from "../../../config/App";
@@ -14,6 +14,7 @@ import {
   MenuItem,
   Slide,
   Fade,
+  Dialog,
 } from "@material-ui/core";
 import {
   FaPlus,
@@ -27,6 +28,7 @@ import {
 } from "react-icons/fa";
 import { FcOpenedFolder } from "react-icons/fc";
 import "./index.modules.css";
+import Owner from "./owner";
 
 export default function Vehicles() {
   const dispatch = useDispatch();
@@ -38,6 +40,7 @@ export default function Vehicles() {
     isDeleted: null,
     menuEl: null,
     confirmEl: null,
+    ownerEl: null,
   });
 
   const _index = (loadMore) => {
@@ -53,18 +56,20 @@ export default function Vehicles() {
     setState({ isDeleted: id });
     dispatch(destroy(id)).then((res) => res && setState({ isDeleted: null }));
   };
-  
+
   const notes = (id) => {
     setState({ menuEl: null });
-    dispatch(changeScreenC({
-      open: true,
-      type: 'notes',
-      props: {
-        uid: id,
-        type: 'vehicles'
-      }
-    }));
-  }
+    dispatch(
+      changeScreenC({
+        open: true,
+        type: "notes",
+        props: {
+          uid: id,
+          type: "vehicles",
+        },
+      })
+    );
+  };
 
   const _handleLoadMore = () => {
     if (vehicles.current_page < vehicles.last_page) {
@@ -213,7 +218,7 @@ export default function Vehicles() {
                               Notas
                             </MenuItem>
 
-                            <MenuItem>
+                            <MenuItem onClick={() => setState({ ownerEl: item.id })}>
                               <FaUser size="1.2em" className="mr-4" />
                               Proprietário
                             </MenuItem>
@@ -248,9 +253,21 @@ export default function Vehicles() {
                         {state.confirmEl && (
                           <Confirm
                             open={item.id === state.confirmEl}
-                            onConfirm={() => _destroy(item.id)}
+                            onConfirm={() => onSelected(item.id)}
                             onClose={() => setState({ confirmEl: null })}
                           />
+                        )}
+
+                        {state.ownerEl && (
+                          <Dialog
+                            open={item.id === state.ownerEl}
+                            onClose={() => setState({ ownerEl: null })}
+                          >
+                            <Owner
+                              item={item}
+                              onClose={() => setState({ ownerEl: null })}
+                            />
+                          </Dialog>
                         )}
                       </div>
                     </div>
