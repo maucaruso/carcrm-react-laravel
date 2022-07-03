@@ -5,6 +5,7 @@ import Notes from '../notes';
 import Owners from '../owners';
 import OwnerEdit from '../owners/edit';
 import OwnerShow from '../owners/show';
+import OwnerVehicles from '../owners/vehicles';
 
 const style = {
   width: '680px',
@@ -47,6 +48,10 @@ export default function Navigation() {
           
           {(nav.screenB.type === "owner-show") &&
             <OwnerShow item={nav.screenB.props.item} />
+          }
+          
+          {(nav.screenB.type === "owner-vehicles") &&
+            <OwnerVehicles uid={nav.screenB.props.uid} />
           }
         </div>
       </Drawer>

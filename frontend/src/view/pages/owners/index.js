@@ -165,6 +165,19 @@ export default function Owners(props) {
     );
   };
 
+  const _vehicles = (owner_id) => {
+    setState({ menuEl: null });
+    dispatch(
+      changeScreenB({
+        open: true,
+        type: "owner-vehicles",
+        props: {
+          uid: owner_id,
+        },
+      })
+    );
+  };
+
   const Transition = forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
   });
@@ -282,7 +295,7 @@ export default function Owners(props) {
                               Notas
                             </MenuItem>
 
-                            <MenuItem>
+                            <MenuItem onClick={() => _vehicles(item.id)}>
                               <FaCar size="1.2em" className="mr-4" /> Veículos
                             </MenuItem>
 

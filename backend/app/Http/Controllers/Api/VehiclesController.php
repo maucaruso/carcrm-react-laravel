@@ -50,9 +50,15 @@ class VehiclesController extends Controller
         ];
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $vehicles = Vehicle::where('user_id', $this->user->id)->where('status', 1)->with(
+        $vehicles = Vehicle::where('user_id', $this->user->id)->where('status', 1);
+
+        if ($request->owner_id) {
+            $vehicles->where('vehicle_owner', $request->owner_id);
+        }
+
+        $vehicles = $vehicles->with(
             'cover',
             'vehicle_owner',
             'vehicle_brand',
@@ -105,12 +111,10 @@ class VehiclesController extends Controller
     {
         $vehicle = Vehicle::where('user_id', $this->user->id)->find($id);
 
-        if ($request->updateOwner) {
+        if ($request->update_owner) {
             $vehicle->vehicle_owner = $request->vehicle_owner;
-            if ($vehicle->save) {
-                if ($vehicle->save()) {
-                    return $this->success('Dados atualizados com sucesso');
-                }
+            if ($vehicle->save()) {
+                return $this->success('Dados atualizados com sucesso');
             }
         }
 
