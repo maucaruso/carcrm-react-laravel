@@ -43,12 +43,58 @@ export default function Vehicles() {
     ownerEl: null,
   });
 
+  useEffect(() => {
+    const scrollEl = document;
+
+    scrollEl.addEventListener("scroll", handleScroll);
+
+    return () => {
+      scrollEl.removeEventListener("scroll", handleScroll);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
+
+  useEffect(() => {
+    _index(isLoadingMore);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
+  useEffect(() => {
+    if (isLoadingMore) {
+      setQuery({
+        ...query,
+        page: query.page + 1,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoadingMore]);
+
+  const handleScroll = (event) => {
+    const { scrollTop, scrollHeight, clientHeight } = event.srcElement.documentElement;
+    let scroll =
+      scrollHeight -
+      (clientHeight + scrollTop);
+
+    if (scroll < SCROOL) {
+      if (!isLoadingMore && _handleLoadMore());
+    }
+  };
+
+  const _handleLoadMore = () => {
+    if (vehicles.current_page < vehicles.last_page) {
+      setIsLoadingMore(true);
+    }
+  };
+
+  const _handleMenu = (event) => {
+    setState({ menuEl: event.currentTarget });
+  };
+
   const _index = (loadMore) => {
     dispatch(index(query, loadMore)).then((res) => {
-      if (res) {
-        setLoading(false);
-        if (isLoadingMore && setIsLoadingMore);
-      }
+      setLoading(false);
+      setIsLoadingMore(false);
     });
   };
 
@@ -71,44 +117,9 @@ export default function Vehicles() {
     );
   };
 
-  const _handleLoadMore = () => {
-    if (vehicles.current_page < vehicles.last_page) {
-      setQuery(
-        {
-          ...query,
-          page: query.page + 1,
-        },
-        () => {
-          _index(true);
-        }
-      );
-    }
-  };
-
-  const _handleScroll = (event) => {
-    let scrollTop =
-      event.srcElement.body.scrollHeight -
-      (event.srcElement.body.offsetHeight +
-        EventTarget.srcElement.body.scrollTop);
-
-    if (scrollTop < SCROOL) {
-      if (!isLoadingMore && _handleLoadMore());
-    }
-  };
-
-  const _handleMenu = (event) => {
-    setState({ menuEl: event.currentTarget });
-  };
-
   const Transition = forwardRef((props, ref) => {
     return <Slide direction="up" ref={ref} {...props} />;
   });
-
-  useEffect(() => {
-    document.addEventListener("scroll", _handleScroll);
-    _index();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <>
@@ -218,7 +229,9 @@ export default function Vehicles() {
                               Notas
                             </MenuItem>
 
-                            <MenuItem onClick={() => setState({ ownerEl: item.id })}>
+                            <MenuItem
+                              onClick={() => setState({ ownerEl: item.id })}
+                            >
                               <FaUser size="1.2em" className="mr-4" />
                               Proprietário
                             </MenuItem>
@@ -271,10 +284,18 @@ export default function Vehicles() {
                         )}
                       </div>
                     </div>
+
+                    <hr />
                   </Fragment>
                 ))}
               </div>
             </div>
+            
+            {isLoadingMore && (
+              <div className="text-center card-body">
+                <CircularProgress />
+              </div>
+            )}
           </>
         )}
       </div>

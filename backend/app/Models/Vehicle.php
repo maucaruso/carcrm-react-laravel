@@ -43,7 +43,7 @@ class Vehicle extends Model
 
     public function vehicle_owner()
     {
-        return $this->hasOne('App\Models\Owners', 'id', 'vehicle_vehicle_owner');
+        return $this->hasOne('App\Models\Owners', 'id', 'vehicle_owner');
     }
 
     public function vehicle_model()

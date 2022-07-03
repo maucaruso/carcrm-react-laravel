@@ -328,6 +328,12 @@ export default function Owners(props) {
                 </React.Fragment>
               ))}
             </List>
+
+            {isLoadingMore && (
+              <div className="text-center card-body">
+                <CircularProgress />
+              </div>
+            )}
           </>
         )}
 

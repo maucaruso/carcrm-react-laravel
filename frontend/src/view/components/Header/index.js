@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   MenuList,
@@ -13,7 +13,7 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
-  Collapse
+  Collapse,
 } from "@material-ui/core";
 import {
   FaCar,
@@ -23,17 +23,19 @@ import {
   FaWhatsapp,
   FaSignOutAlt,
   FaAngleUp,
-  FaAngleDown
+  FaAngleDown,
 } from "react-icons/fa";
 import { MdMenu } from "react-icons/md";
-import { useDispatch } from 'react-redux';
+import { useDispatch } from "react-redux";
 import { changeScreenA } from "../../../store/actions/navigation.action";
 
 import "./style.modules.css";
 
 export default function Header(props) {
   const dispatch = useDispatch();
-  
+
+  const [mobile, setMobile] = useState(window.innerWidth < 577 ? true : false);
+
   const [state, setState] = useState({
     open: false,
   });
@@ -42,18 +44,29 @@ export default function Header(props) {
     site: false,
     financeiro: false,
   });
-  
+
+  useEffect(() => {
+    window.addEventListener("resize", _resize);
+  }, []);
+
+  const _resize = () => {
+    setMobile(window.innerWidth < 577 ? true : false);
+  };
+
   const handlePage = (page) => {
-    dispatch(changeScreenA({
-      open: true,
-      type: page,
-      props: {}
-    }));
-  }
+    dispatch(
+      changeScreenA({
+        open: true,
+        type: page,
+        props: {},
+      })
+    );
+    setState({ open: false });
+  };
 
   return (
     <>
-      {window.innerWidth < 577 ? (
+      {mobile ? (
         <AppBar position="fixed">
           <Toolbar>
             <IconButton
@@ -83,7 +96,11 @@ export default function Header(props) {
               </li>
 
               <li className="nav-item">
-                <button onClick={() => handlePage('owners')} className="nav-link bg-transparent" to="/vehicles">
+                <button
+                  onClick={() => handlePage("owners")}
+                  className="nav-link bg-transparent"
+                  to="/vehicles"
+                >
                   <FaUsers className="icon-lg mr-2" /> Proprietários
                 </button>
               </li>
@@ -153,19 +170,26 @@ export default function Header(props) {
         open={state.open}
         onClose={() => setState({ open: false })}
       >
-        <div style={{width: 320, maxWidth: window.innerWidth - 70}}>
+        <div style={{ width: 320, maxWidth: window.innerWidth - 70 }}>
           <List omponent="nav" className="menu-mobile">
             <ListItem>
-              <img className="img-fluid logo-mobile" src="/logo.png" alt="Car CRM" height="37" />
+              <img
+                className="img-fluid logo-mobile"
+                src="/logo.png"
+                alt="Car CRM"
+                height="37"
+              />
             </ListItem>
 
-            <ListItem>
-              test@gmail.com
-            </ListItem>
+            <ListItem>test@gmail.com</ListItem>
 
             <Divider className="mt-2 mb-2" />
 
-            <ListItem>
+            <ListItem
+              to="/vehicles"
+              component={Link}
+              onClick={() => setState({ open: false })}
+            >
               <ListItemIcon>
                 <FaCar />
               </ListItemIcon>
@@ -174,7 +198,7 @@ export default function Header(props) {
 
             <Divider className="mt-2 mb-2" />
 
-            <ListItem>
+            <ListItem onClick={() => handlePage("owners")}>
               <ListItemIcon>
                 <FaUsers />
               </ListItemIcon>
@@ -183,22 +207,31 @@ export default function Header(props) {
 
             <Divider className="mt-2 mb-2" />
 
-            <ListItem button onClick={() => setCollapse({ site: !collapse.site })}>
+            <ListItem
+              button
+              onClick={() => setCollapse({ site: !collapse.site })}
+            >
               <ListItemIcon>
                 <FaLaptop />
               </ListItemIcon>
               <ListItemText primary="Site" />
-              {(collapse.site ? <FaAngleUp /> : <FaAngleDown />)}
+              {collapse.site ? <FaAngleUp /> : <FaAngleDown />}
             </ListItem>
 
             <Collapse in={collapse.site} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
                 <ListItem>
-                  <ListItemText className="pl-3" primary="Otimização para o Google" />
+                  <ListItemText
+                    className="pl-3"
+                    primary="Otimização para o Google"
+                  />
                 </ListItem>
 
                 <ListItem>
-                  <ListItemText className="pl-3" primary="Unidades e Telefones" />
+                  <ListItemText
+                    className="pl-3"
+                    primary="Unidades e Telefones"
+                  />
                 </ListItem>
 
                 <ListItem>
@@ -217,12 +250,15 @@ export default function Header(props) {
 
             <Divider className="mt-2 mb-2" />
 
-            <ListItem button onClick={() => setCollapse({ financeiro: !collapse.financeiro })}>
+            <ListItem
+              button
+              onClick={() => setCollapse({ financeiro: !collapse.financeiro })}
+            >
               <ListItemIcon>
                 <FaCreditCard />
               </ListItemIcon>
               <ListItemText primary="Financeiro" />
-              {(collapse.financeiro ? <FaAngleUp /> : <FaAngleDown />)}
+              {collapse.financeiro ? <FaAngleUp /> : <FaAngleDown />}
             </ListItem>
 
             <Collapse in={collapse.financeiro} timeout="auto" unmountOnExit>

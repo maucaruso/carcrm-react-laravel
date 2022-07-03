@@ -16,8 +16,15 @@ import { useDispatch } from "react-redux";
 
 import "./owner.modules.css";
 import { Confirm } from "../../components";
-import { changeScreenA } from "../../../store/actions/navigation.action";
-import { indexResponse, update, updateResponse } from "../../../store/actions/vehicles.action";
+import {
+  changeScreenA,
+  changeScreenB,
+} from "../../../store/actions/navigation.action";
+import {
+  indexResponse,
+  update,
+  updateResponse,
+} from "../../../store/actions/vehicles.action";
 
 export default function Owner(props) {
   const dispatch = useDispatch();
@@ -27,7 +34,7 @@ export default function Owner(props) {
     isDeleted: null,
     confirmEl: null,
   });
-  
+
   useEffect(() => {
     return () => {
       dispatch(indexResponse({ success: false }));
@@ -45,6 +52,18 @@ export default function Owner(props) {
           onSelected: (owner) => {
             _update(owner, owner.id);
           },
+        },
+      })
+    );
+  };
+
+  const _show = (item) => {
+    dispatch(
+      changeScreenB({
+        open: true,
+        type: "owner-show",
+        props: {
+          item,
         },
       })
     );
@@ -73,7 +92,7 @@ export default function Owner(props) {
       <List className="pb-3">
         {item.vehicle_owner && (
           <ListItem button>
-            <ListItemAvatar>
+            <ListItemAvatar onClick={() => _show(item.vehicle_owner)}>
               <Avatar className="account-avatar">
                 <MdPerson />
               </Avatar>
@@ -81,12 +100,16 @@ export default function Owner(props) {
             <ListItemText
               className="pb-3 pt-3 m-0"
               primary={item.vehicle_owner.name}
+              onClick={() => _show(item.vehicle_owner)}
             />
 
             {state.isDeleted === item.vehicle_owner.id ? (
               <CircularProgress color="secondary" className="mr-2" />
             ) : (
-              <IconButton onClick={() => setState({ confirmEl: item.vehicle_owner.id })} className="ml-auto">
+              <IconButton
+                onClick={() => setState({ confirmEl: item.vehicle_owner.id })}
+                className="ml-auto"
+              >
                 <MdDelete />
               </IconButton>
             )}
