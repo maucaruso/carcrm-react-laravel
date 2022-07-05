@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AppController;
 use App\Http\Controllers\Api\NotesController;
 use App\Http\Controllers\Api\OwnersController;
 use App\Http\Controllers\Api\Uploads\VehicleUploadController;
@@ -12,6 +13,8 @@ Route::apiResources([
     'notes' => NotesController::class,
     'owners' => OwnersController::class,
 ]);
+
+Route::resource('app', AppController::class);
 
 Route::get('vehicles/{vehicle_type}/brand', [VehiclesController::class, 'brand']);
 Route::get('vehicles/{vehicle_type}/{vehicle_brand}/model', [VehiclesController::class, 'model']);

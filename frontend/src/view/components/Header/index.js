@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { index } from '../../../store/actions/app.action';
+
 import {
   MenuList,
   MenuItem,
@@ -46,7 +48,10 @@ export default function Header(props) {
   });
 
   useEffect(() => {
+    dispatch(index());
     window.addEventListener("resize", _resize);
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const _resize = () => {
