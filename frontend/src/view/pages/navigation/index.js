@@ -6,6 +6,7 @@ import Owners from '../owners';
 import OwnerEdit from '../owners/edit';
 import OwnerShow from '../owners/show';
 import OwnerVehicles from '../owners/vehicles';
+import Seo from '../site/seo';
 
 const style = {
   width: '680px',
@@ -30,6 +31,9 @@ export default function Navigation() {
               props={nav.screenA.props}
             />
           )}
+          {(nav.screenA.type === 'seo') &&
+            <Seo />
+          }
         </div>
       </Drawer>
       

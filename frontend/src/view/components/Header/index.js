@@ -119,7 +119,7 @@ export default function Header(props) {
                   <FaLaptop className="icon-lg mr-2" /> Site
                 </Link>
 
-                <MenuList className="dropdown-menu">
+                <MenuList className="dropdown-menu" onClick={() => handlePage("seo")}>
                   <MenuItem className="dropdown-item">
                     Otimização para o Google
                   </MenuItem>
@@ -225,7 +225,7 @@ export default function Header(props) {
 
             <Collapse in={collapse.site} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItem>
+                <ListItem onClick={() => handlePage("seo")}>
                   <ListItemText
                     className="pl-3"
                     primary="Otimização para o Google"

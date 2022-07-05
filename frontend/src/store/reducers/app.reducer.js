@@ -6,7 +6,7 @@ const initialState = {
   error: {},
 };
 
-const AppReducer = (state = initialState, { type, payload }) => {
+const appReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case actionTypes.INDEX:
       return { ...state, ...payload };
@@ -37,4 +37,4 @@ const AppReducer = (state = initialState, { type, payload }) => {
   }
 };
 
-export default AppReducer;
+export default appReducer;
