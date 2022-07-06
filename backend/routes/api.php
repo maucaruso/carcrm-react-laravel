@@ -12,6 +12,7 @@ Route::apiResources([
     'vehicles' => VehiclesController::class,
     'notes' => NotesController::class,
     'owners' => OwnersController::class,
+    'units' => UnitsController::class,
 ]);
 
 Route::resource('app', AppController::class);
