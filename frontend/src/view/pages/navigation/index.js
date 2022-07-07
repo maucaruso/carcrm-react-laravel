@@ -7,6 +7,8 @@ import OwnerEdit from '../owners/edit';
 import OwnerShow from '../owners/show';
 import OwnerVehicles from '../owners/vehicles';
 import Seo from '../site/seo';
+import Units from '../site/units';
+import UnitEdit from '../site/units/edit';
 
 const style = {
   width: '680px',
@@ -31,8 +33,13 @@ export default function Navigation() {
               props={nav.screenA.props}
             />
           )}
+          
           {(nav.screenA.type === 'seo') &&
             <Seo />
+          }
+          
+          {(nav.screenA.type === 'units') &&
+            <Units />
           }
         </div>
       </Drawer>
@@ -56,6 +63,10 @@ export default function Navigation() {
           
           {(nav.screenB.type === "owner-vehicles") &&
             <OwnerVehicles uid={nav.screenB.props.uid} />
+          }
+          
+          {(nav.screenB.type === "unit-edit") &&
+            <UnitEdit uid={nav.screenB.props.uid} />
           }
         </div>
       </Drawer>

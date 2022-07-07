@@ -124,7 +124,7 @@ export default function Header(props) {
                     Otimização para o Google
                   </MenuItem>
 
-                  <MenuItem className="dropdown-item">
+                  <MenuItem className="dropdown-item" onClick={() => handlePage("units")}>
                     Unidades e Telefones
                   </MenuItem>
 
@@ -232,7 +232,7 @@ export default function Header(props) {
                   />
                 </ListItem>
 
-                <ListItem>
+                <ListItem onClick={() => handlePage("units")}>
                   <ListItemText
                     className="pl-3"
                     primary="Unidades e Telefones"

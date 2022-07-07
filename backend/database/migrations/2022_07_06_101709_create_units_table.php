@@ -17,9 +17,9 @@ class CreateUnitsTable extends Migration
             $table->id();
 
             $table->bigInteger('user_id')->nullable();
-            $table->string('phone', 15)->nullable();
-            $table->string('phone2', 15)->nullable();
-            $table->string('phon3', 15)->nullable();
+            $table->string('phone', 16)->nullable();
+            $table->string('phone2', 16)->nullable();
+            $table->string('phon3', 16)->nullable();
             $table->string('zipCode', 9)->nullable();
             $table->string('uf', 2)->nullable();
             $table->string('city')->nullable();

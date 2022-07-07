@@ -33,6 +33,18 @@ const unitsReducer = (state = initialState, { type, payload }) => {
         units: state.units.filter((item) => item.id !== payload),
       };
 
+    case actionTypes.CHANGE:
+      return {
+        ...state,
+        unit:
+          payload === "clear"
+            ? {}
+            : {
+                ...state.unit,
+                ...payload,
+              },
+      };
+
     case actionTypes.SUCCESS:
       return {
         ...state,
