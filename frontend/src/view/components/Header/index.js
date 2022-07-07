@@ -119,8 +119,8 @@ export default function Header(props) {
                   <FaLaptop className="icon-lg mr-2" /> Site
                 </Link>
 
-                <MenuList className="dropdown-menu" onClick={() => handlePage("seo")}>
-                  <MenuItem className="dropdown-item">
+                <MenuList className="dropdown-menu">
+                  <MenuItem className="dropdown-item" onClick={() => handlePage("seo")}>
                     Otimização para o Google
                   </MenuItem>
 
