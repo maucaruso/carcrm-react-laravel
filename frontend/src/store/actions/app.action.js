@@ -66,3 +66,41 @@ export const update = (data) => (dispatch) => {
     }
   });
 };
+
+// UPLOAD LOGO
+
+export const uploadLogo = (item) => (dispatch) => {
+  return HttpAuth.post("/upload/logo", item).then((res) => {
+    if (typeof res !== "undefined") {
+      if (res.data.logo) {
+        dispatch(
+          changeNotify({
+            open: true,
+            msg: "Logo enviado com sucesso",
+            class: "success",
+          })
+        );
+        dispatch(change({ logo: res.data.logo }));
+      }
+    }
+  });
+};
+
+// DESTROY LOGO
+
+export const destroyLogo = (id) => (dispatch) => {
+  return HttpAuth.delete("/upload/logo/" + id).then((res) => {
+    if (typeof res !== "undefined") {
+      if (res.data.status === 200) {
+        dispatch(
+          changeNotify({
+            open: true,
+            msg: "Logo apagada com sucesso",
+            class: "success",
+          })
+        );
+        dispatch(change({ logo: null }));
+      }
+    }
+  });
+};

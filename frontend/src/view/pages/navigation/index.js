@@ -9,6 +9,7 @@ import OwnerVehicles from '../owners/vehicles';
 import Seo from '../site/seo';
 import Units from '../site/units';
 import UnitEdit from '../site/units/edit';
+import Logo from '../site/logo';
 
 const style = {
   width: '680px',
@@ -40,6 +41,10 @@ export default function Navigation() {
           
           {(nav.screenA.type === 'units') &&
             <Units />
+          }
+          
+          {(nav.screenA.type === 'logo') &&
+            <Logo />
           }
         </div>
       </Drawer>
