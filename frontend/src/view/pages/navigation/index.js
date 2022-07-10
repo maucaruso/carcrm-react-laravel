@@ -11,6 +11,7 @@ import Units from '../site/units';
 import UnitEdit from '../site/units/edit';
 import Logo from '../site/logo';
 import Domain from '../site/domain';
+import Settings from '../site/settings';
 
 const style = {
   width: '680px',
@@ -50,6 +51,10 @@ export default function Navigation() {
           
           {(nav.screenA.type === 'domain') &&
             <Domain />
+          }
+          
+          {(nav.screenA.type === 'settings') &&
+            <Settings />
           }
         </div>
       </Drawer>
