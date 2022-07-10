@@ -37,11 +37,11 @@ class AppController extends Controller
     {
         $rules = [];
 
-        if ($request->domain != $this->user->domain) {
+        if ($request->domain != $this->user->domain && $request->domain !== null) {
             $rules = array_merge($rules, ['domain' => 'unique:users']);
         }
 
-        if ($request->subdomain != $this->user->subdomain) {
+        if ($request->subdomain != $this->user->subdomain && $request->subdomain !== null) {
             $rules = array_merge($rules, ['subdomain' => 'unique:users']);
         }
 

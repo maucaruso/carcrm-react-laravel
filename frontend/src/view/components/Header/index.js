@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { index } from '../../../store/actions/app.action';
+import { index } from "../../../store/actions/app.action";
 
 import {
   MenuList,
@@ -50,7 +50,7 @@ export default function Header(props) {
   useEffect(() => {
     dispatch(index());
     window.addEventListener("resize", _resize);
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -120,17 +120,33 @@ export default function Header(props) {
                 </Link>
 
                 <MenuList className="dropdown-menu">
-                  <MenuItem className="dropdown-item" onClick={() => handlePage("seo")}>
+                  <MenuItem
+                    className="dropdown-item"
+                    onClick={() => handlePage("seo")}
+                  >
                     Otimização para o Google
                   </MenuItem>
 
-                  <MenuItem className="dropdown-item" onClick={() => handlePage("units")}>
+                  <MenuItem
+                    className="dropdown-item"
+                    onClick={() => handlePage("units")}
+                  >
                     Unidades e Telefones
                   </MenuItem>
 
-                  <MenuItem className="dropdown-item" onClick={() => handlePage("logo")}>Minha Logo</MenuItem>
+                  <MenuItem
+                    className="dropdown-item"
+                    onClick={() => handlePage("logo")}
+                  >
+                    Minha Logo
+                  </MenuItem>
 
-                  <MenuItem className="dropdown-item">Domínio</MenuItem>
+                  <MenuItem
+                    className="dropdown-item"
+                    onClick={() => handlePage("domain")}
+                  >
+                    Domínio
+                  </MenuItem>
 
                   <MenuItem className="dropdown-item">Configurações</MenuItem>
                 </MenuList>
@@ -243,7 +259,7 @@ export default function Header(props) {
                   <ListItemText className="pl-3" primary="Minha logo" />
                 </ListItem>
 
-                <ListItem>
+                <ListItem onClick={() => handlePage("domain")}>
                   <ListItemText className="pl-3" primary="Domínio" />
                 </ListItem>
 

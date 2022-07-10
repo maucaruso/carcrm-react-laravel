@@ -10,6 +10,7 @@ import Seo from '../site/seo';
 import Units from '../site/units';
 import UnitEdit from '../site/units/edit';
 import Logo from '../site/logo';
+import Domain from '../site/domain';
 
 const style = {
   width: '680px',
@@ -45,6 +46,10 @@ export default function Navigation() {
           
           {(nav.screenA.type === 'logo') &&
             <Logo />
+          }
+          
+          {(nav.screenA.type === 'domain') &&
+            <Domain />
           }
         </div>
       </Drawer>

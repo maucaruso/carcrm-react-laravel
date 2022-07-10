@@ -104,3 +104,43 @@ export const destroyLogo = (id) => (dispatch) => {
     }
   });
 };
+
+// VALIDATE SUBDOMAIN
+
+export const validateSubdomain = (value) => (dispatch) => {
+  value = value.toLowerCase();
+  if (value.search(" ") >= 0) {
+    value = value.replace(" ", "");
+    dispatch(
+      changeAlert({
+        open: true,
+        msg: "O endereço do seu site não pode conter espaços em branco",
+        class: "error",
+      })
+    );
+  }
+
+  if (value.search("www") >= 0) {
+    value = value.replace("www", "");
+    dispatch(
+      changeAlert({
+        open: true,
+        msg: "Digite o endereço do seu site sem o wwww",
+        class: "error",
+      })
+    );
+  }
+
+  if (value.search(".com") >= 0) {
+    value = value.replace(".com", "");
+    dispatch(
+      changeAlert({
+        open: true,
+        msg: "Para utilizar domínio .com clique no botão abaixo 'USAR MEU DOMÍNIO'",
+        class: "error",
+      })
+    );
+  }
+  
+  return value.normalize('NFD').replace(/([\u0300-\u036f]|[^0-9a-zA-Z])/g, '');
+};
