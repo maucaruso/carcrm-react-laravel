@@ -40,7 +40,7 @@ export default function Plans() {
                       {new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(item.price)}
                       <span className="badge badge-success ml-2">{item.discount}</span>
                     </h5>
-                    <label>Equivalemnte a</label>
+                    <label>Equivalente a</label>
                     <h3 className="mt-2 mb-4 h1">
                       {new Intl.NumberFormat('pt-BR', {style: 'currency', currency: 'BRL'}).format(item.equivalent)}
                       <span className="btn-sm p-0">/mês</span>

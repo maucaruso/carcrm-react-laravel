@@ -24,6 +24,14 @@ body {
   background-color: #eee;
 }
 
+svg {
+  flex-shrink: 0;
+}
+
+.pointer, .pointer * {
+  cursor: pointer;
+}
+
 @media (max-width: 576px) {
   body {
     margin-top: 56px;
