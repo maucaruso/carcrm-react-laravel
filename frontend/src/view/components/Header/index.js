@@ -162,7 +162,11 @@ export default function Header(props) {
                 </Link>
 
                 <MenuList className="dropdown-menu">
-                  <MenuItem className="dropdown-item">Meu plano</MenuItem>
+                  <MenuItem 
+                    className="dropdown-item"
+                    component={Link}
+                    to="/pay"
+                  >Meu plano</MenuItem>
 
                   <MenuItem className="dropdown-item">
                     Minhas transações
@@ -284,7 +288,11 @@ export default function Header(props) {
 
             <Collapse in={collapse.financeiro} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItem>
+                <ListItem
+                  component={Link}
+                  to="/pay"
+                  onClick={() => setState({ open: false })}
+                >
                   <ListItemText className="pl-3" primary="Meu plano" />
                 </ListItem>
 

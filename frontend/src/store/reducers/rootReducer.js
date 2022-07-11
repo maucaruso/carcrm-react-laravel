@@ -10,6 +10,7 @@ import notesReducer from "./notes.reducer";
 import ownersReducer from "./owners.reducer";
 import appReducer from "./app.reducer";
 import unitsReducer from "./units.reducer";
+import payReducer from "./pay.reducer";
 
 const rootReducer = combineReducers({
   loadingReducer,
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
   notesReducer,
   ownersReducer,
   appReducer,
-  unitsReducer
+  unitsReducer,
+  payReducer
 });
 
 export default rootReducer;
