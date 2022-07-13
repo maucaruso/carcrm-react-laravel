@@ -1,0 +1,10 @@
+.cvv_info::after {
+  content: "";
+  display: block;
+  position: absolute;
+  right: 8px;
+  top: 17px;
+  width: 37px;
+  height: 25px;
+  background: url('../../../../public/payment-screen-sprites.png') -737px 0 no-repeat;
+}
