@@ -4,7 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, InputAdornment, TextField } from "@material-ui/core";
 import MaskedInput from "react-text-mask";
 import { MdArrowBack, MdCreditCard, MdEmail } from "react-icons/md";
-import { change, error as setError } from '../../../store/actions/pay.action';
+import {
+  alertError,
+  change,
+  error as setError,
+  payCard,
+  payPec,
+} from "../../../store/actions/pay.action";
 
 const TextMaskCustom = (props) => {
   const { inputRef, ...other } = props;
@@ -123,6 +129,73 @@ export default function Payment() {
       setCart({ ...cart, cardExpiration: value });
     }
   };
+
+  const _payCard = () => {
+    window.Mercadopago.createToken(
+      document.getElementById("pay"),
+      setCardTokenAndPay
+    );
+  };
+
+  const setCardTokenAndPay = (status, response) => {
+    if (status === 200 || status === 201) {
+      dispatch(
+        payCard({
+          token: response.id,
+          payment_method_id: document.getElementById("paymentMethodId").value,
+          plan_id: plan.id,
+          email: cart.email,
+        })
+      );
+    } else {
+      _setError(response.cause[0].code);
+    }
+  };
+
+  const _setError = (errorCode) => {
+    if (errorCode === "205") {
+      dispatch(alertError({ cardNumber: "Digite o número do cartão" }));
+    }
+    
+    if (errorCode === "E301") {
+      dispatch(alertError({ cardNumber: "Número do cartão inválido." }));
+    }
+    
+    if (errorCode === "E302") {
+      dispatch(alertError({ securityCode: "Confira o código de segurança." }));
+    }
+    
+    if (errorCode === "221") {
+      dispatch(alertError({ cardholderName: "Digite o nome impresso no cartão" }));
+    }
+
+    if (errorCode === "208" || errorCode === "209") {
+      dispatch(alertError({ cardExpiration: "Digite o vencimento do cartão." }));
+    }
+
+    if (errorCode === "325" || errorCode === "326") {
+      dispatch(alertError({ cardExpiration: "Vencimento do cartão inválido." }));
+    }
+    
+    if (errorCode === "214") {
+      dispatch(alertError({ cpf: "Informe o número do seu CPF." }));
+    }
+    
+    if (errorCode === "324") {
+      dispatch(alertError({ cpf: "Número do CPF inválido." }));
+    }
+  };
+  
+  const _payPec = () => {
+    dispatch(payPec({
+      payment_method_id: pay_type,
+      plan_id: plan.id,
+      first_name: cart.first_name,
+      last_name: cart.last_name,
+      email: cart.email,
+      cpf: (cart.cpf) && cart.cpf.replace(/[^a-zA-z0-9]/g, '')
+    }))
+  }
 
   return (
     <form id="pay">
@@ -339,12 +412,15 @@ export default function Payment() {
           className="mt-4 mb-4 mr-3 font-weight-bold"
           startIcon={<MdArrowBack />}
           onClick={() => {
-            dispatch(setError({}))
-            dispatch(change({ pay_type: null }))
+            dispatch(setError({}));
+            dispatch(change({ pay_type: null }));
           }}
-        >&nbsp;</Button>
-        
+        >
+          &nbsp;
+        </Button>
+
         <Button
+          onClick={() => (pay_type === 'card') ? _payCard() : _payPec()}
           variant="contained"
           color="primary"
           fullWidth
