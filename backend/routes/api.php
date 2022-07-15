@@ -19,6 +19,7 @@ Route::apiResources([
 ]);
 
 Route::resource('app', AppController::class);
+Route::resource('transactions', TransactionController::class)->only('index', 'show');
 
 Route::get('vehicles/{vehicle_type}/brand', [VehiclesController::class, 'brand']);
 Route::get('vehicles/{vehicle_type}/{vehicle_brand}/model', [VehiclesController::class, 'model']);
