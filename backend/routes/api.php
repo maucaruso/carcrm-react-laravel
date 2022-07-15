@@ -34,5 +34,7 @@ Route::group(['prefix' => 'upload'], function () {
 });
 
 Route::group(['prefix' => 'pay'], function () {
+    Route::post('card', [PayController::class, 'card']);
+    Route::post('pec', [PayController::class, 'pec']);
     Route::get('plans', [PayController::class, 'plans']);
 });
