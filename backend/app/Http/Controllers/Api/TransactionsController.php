@@ -19,6 +19,16 @@ class TransactionsController extends Controller
     {
         $transactions = Transactions::where('user_id', $this->user->id)->orderBy('id', 'DESC')->paginate(env('APP_PAGINATE'));
 
+        $transactions->transform(function ($transaction) {
+            $transaction->status_pt = __('mercadopago.' . $transaction->status);
+            $transaction->status_detail = __('mercadopago.' . $transaction->status_detail, [
+                'statement_descriptor' => $transaction->description,
+                'payment_method_id' => $transaction->payment_method_id
+            ]);
+
+            return $transaction;
+        });
+
         return compact('transactions');
     }
 
