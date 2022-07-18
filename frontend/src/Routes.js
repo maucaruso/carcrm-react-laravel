@@ -11,6 +11,7 @@ const Register = lazy(() => import("./view/pages/register"));
 const Vehicles = lazy(() => import("./view/pages/vehicles"));
 const VehicleEdit = lazy(() => import("./view/pages/vehicles/edit"));
 const Pay = lazy(() => import("./view/pages/pay"));
+const Transactions = lazy(() => import("./view/pages/transactions"));
 
 const Routes = () => (
   <Router>
@@ -29,6 +30,7 @@ const Routes = () => (
         <Route path="/login" element={<Auth />} />
         <Route path="/register" element={<Register />} />
         <Route path="/pay" element={<Pay />} />
+        <Route path="/transactions" element={<Transactions />} />
       </ReactRoutes>
     </Suspense>
   </Router>

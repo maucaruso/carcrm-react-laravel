@@ -168,7 +168,11 @@ export default function Header(props) {
                     to="/pay"
                   >Meu plano</MenuItem>
 
-                  <MenuItem className="dropdown-item">
+                  <MenuItem
+                    component={Link}
+                    to="/transactions"
+                    className="dropdown-item"
+                  >
                     Minhas transações
                   </MenuItem>
                 </MenuList>
@@ -296,7 +300,11 @@ export default function Header(props) {
                   <ListItemText className="pl-3" primary="Meu plano" />
                 </ListItem>
 
-                <ListItem>
+                <ListItem
+                  component={Link}
+                  to="/transactions"
+                  onClick={() => setState({ open: false })}
+                >
                   <ListItemText className="pl-3" primary="Minhas transações" />
                 </ListItem>
               </List>
