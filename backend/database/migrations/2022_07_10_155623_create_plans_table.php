@@ -19,6 +19,7 @@ class CreatePlansTable extends Migration
             $table->string('title')->nullable();
             $table->float('price')->nullable();
             $table->float('equivalent')->nullable();
+            $table->integer('period', 2)->nullable();
             $table->string('discount')->nullable();
 
             $table->timestamps();
