@@ -16,7 +16,7 @@ export const index = (query, isLoadMore) => (dispatch) => {
   return HttpAuth.get("/transactions?" + new URLSearchParams(query)).then(
     (res) =>
       typeof res !== "undefined" &&
-      dispatch(indexResponse(res.dada, isLoadMore))
+      dispatch(indexResponse(res.data, isLoadMore))
   );
 };
 

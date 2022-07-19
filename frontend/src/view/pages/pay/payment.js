@@ -11,6 +11,7 @@ import {
   payCard,
   payPec,
 } from "../../../store/actions/pay.action";
+import { Navigate } from "react-router-dom";
 
 const TextMaskCustom = (props) => {
   const { inputRef, ...other } = props;
@@ -429,6 +430,10 @@ export default function Payment() {
         >
           Realizar pagamento
         </Button>
+        
+        {(success) &&
+          <Navigate to={'/transactions/' + success} />
+        }
       </div>
     </form>
   );

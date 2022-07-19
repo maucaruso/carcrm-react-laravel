@@ -36,6 +36,12 @@ class TransactionsController extends Controller
     {
         $transaction = Transactions::where('user_id', $this->user->id)->where('transaction_id', $id)->first();
 
+        $transaction->status_pt = __('mercadopago.' . $transaction->status);
+        $transaction->status_detail = __('mercadopago.' . $transaction->status_detail, [
+            'statement_descriptor' => $transaction->description,
+            'payment_method_id' => $transaction->payment_method_id
+        ]);
+
         return compact('transaction');
     }
 }

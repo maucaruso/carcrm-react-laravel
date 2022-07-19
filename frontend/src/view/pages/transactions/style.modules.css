@@ -1,0 +1,11 @@
+.pending {
+  color: #17a2b8 !important;
+}
+
+.approved, .authorized, .refunded, .charged_back {
+  color: #28a745 !important;
+}
+
+.in_mediation, .cancelled, .rejected {
+  color: #dc3545 !important;
+}
