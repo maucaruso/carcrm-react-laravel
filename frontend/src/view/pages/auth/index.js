@@ -73,7 +73,7 @@ export default function Auth() {
                 Cadastrar
               </RegisterButton>
 
-              {success && <Navigate to="/vehicles" />}
+              {success && <Navigate to="/" />}
             </div>
           </div>
         </div>

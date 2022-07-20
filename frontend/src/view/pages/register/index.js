@@ -84,7 +84,7 @@ export default function Register() {
             </div>
 
             {(success &&
-              <Navigate to="/vehicles" />
+              <Navigate to="/" />
             )}
           </div>
         </div>
