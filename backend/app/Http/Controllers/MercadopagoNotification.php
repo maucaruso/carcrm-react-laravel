@@ -44,13 +44,17 @@ class MercadopagoNotification extends Controller
 
                 if ($payment->status === 'approved') {
                     $user = User::find($payment->metadata->user_id);
-                    $plan = Plans::find($payment->metadata->item->id);
 
-                    $next_expiration = Carbon::now();
+                    $plan = Plans::find($payment->metadata->item->id);
+                    echo json_encode($plan);
+                    exit;
+
+                    $next_expiration = new Carbon($user->next_expiration);
                     $next_expiration = $next_expiration->addMonths($plan->period);
 
                     if ($user) {
                         $user->status = 2;
+                        $user->plan_id = $plan->id;
                         $user->disabled_account = null;
                         $user->delete_account = null;
                         $user->next_expiration = $next_expiration;
